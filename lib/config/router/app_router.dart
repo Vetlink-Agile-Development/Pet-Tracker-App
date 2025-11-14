@@ -49,7 +49,7 @@ final goRouterProvider = Provider((ref) {
           ),
           GoRoute(
             path: '/chat',
-            builder: (context, state) => ChatScreen(),
+            builder: (context, state) => const ChatScreen(),
           ),
           GoRoute(
             path: '/vital-signs',

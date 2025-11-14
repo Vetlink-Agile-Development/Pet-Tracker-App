@@ -108,19 +108,19 @@ class PredictionResultScreen extends StatelessWidget {
                               },
                             ),
                           ),
-                          topTitles: AxisTitles(
+                          topTitles: const AxisTitles(
                               sideTitles: SideTitles(showTitles: false)),
-                          rightTitles: AxisTitles(
+                          rightTitles: const AxisTitles(
                               sideTitles: SideTitles(showTitles: false)),
                         ),
                       ),
                     ),
             ),
             const SizedBox(height: 16),
-            Text(
+            const Text(
                 'These predictions are generated using machine learning models trained on your pet’s data.',
                 textAlign: TextAlign.center,
-                style: const TextStyle(color: Colors.grey)),
+                style: TextStyle(color: Colors.grey)),
           ],
         ),
       ),

@@ -19,7 +19,7 @@ class PredictionLoadingScreen extends StatefulWidget {
 
   @override
   State<PredictionLoadingScreen> createState() => _PredictionLoadingScreenState(
-      this.repository, this.storageService, this.deviceRepository);
+      repository, storageService, deviceRepository);
 }
 
 class _PredictionLoadingScreenState extends State<PredictionLoadingScreen>
@@ -44,6 +44,7 @@ class _PredictionLoadingScreenState extends State<PredictionLoadingScreen>
     _loadPrediction();
   }
 
+  @override
   void dispose() {
     _controller.dispose();
     super.dispose();
@@ -53,7 +54,7 @@ class _PredictionLoadingScreenState extends State<PredictionLoadingScreen>
   final KeyValueStorageService storageService;
   final DeviceRepositoryImpl deviceRepository;
   _PredictionLoadingScreenState(
-      this.repository, this.storageService, this.deviceRepository) {}
+      this.repository, this.storageService, this.deviceRepository);
 
   Future<void> _loadPrediction() async {
     try {

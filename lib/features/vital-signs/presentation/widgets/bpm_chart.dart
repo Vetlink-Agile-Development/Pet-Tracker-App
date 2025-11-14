@@ -58,7 +58,7 @@ class BpmChartWidget extends StatelessWidget {
                         barWidth: 3,
                         belowBarData: BarAreaData(
                           show: true,
-                          color: Colors.blue.withValues(alpha: 0.3),
+                          color: Colors.blue.withOpacity(0.3),
                         ),
                       ),
                     ],
@@ -93,11 +93,11 @@ class BpmChartWidget extends StatelessWidget {
                         ),
                       ),
                       topTitles:
-                          AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                          const AxisTitles(sideTitles: SideTitles(showTitles: false)),
                       rightTitles:
-                          AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                          const AxisTitles(sideTitles: SideTitles(showTitles: false)),
                     ),
-                    gridData: FlGridData(show: true),
+                    gridData: const FlGridData(show: true),
                     borderData: FlBorderData(show: true),
                   ),
                 ),

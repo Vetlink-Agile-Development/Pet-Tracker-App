@@ -16,10 +16,10 @@ class GeofenceCard extends StatelessWidget {
         .toList();
 
     if (coordinates.isEmpty) {
-      return Card(
-        margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+      return const Card(
+        margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
         child: Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: EdgeInsets.all(8.0),
           child: Text("Geofence has no coordinates", style: TextStyle(color: Colors.red)),
         ),
       );

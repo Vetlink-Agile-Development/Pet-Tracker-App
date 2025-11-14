@@ -17,7 +17,7 @@ class TipItem {
 class TipCardWithAccentBorder extends StatelessWidget {
   final TipItem tip;
 
-  const TipCardWithAccentBorder(this.tip);
+  const TipCardWithAccentBorder(this.tip, {super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -173,7 +173,7 @@ class GeofenceDetailsScreenState extends ConsumerState<GeofenceDetailsScreen> {
               ),
               const SizedBox(height: 20),
               DropdownButtonFormField<String>(
-                value: _geoFenceStatus,
+                initialValue: _geoFenceStatus,
                 items: const [
                   DropdownMenuItem(
                     value: 'ACTIVE',

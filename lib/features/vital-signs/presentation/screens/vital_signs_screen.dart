@@ -30,8 +30,9 @@ class _HealthSummaryScreenState extends ConsumerState<HealthSummaryScreen>
     final state = ref.watch(healthSummaryProvider);
     final notifier = ref.read(healthSummaryProvider.notifier);
 
-    if (state.isLoading)
+    if (state.isLoading) {
       return const Center(child: CircularProgressIndicator());
+    }
     if (state.errorMessage != null) return Text(state.errorMessage!);
 
     return Scaffold(

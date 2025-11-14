@@ -86,7 +86,7 @@ class _EditDeviceDialogState extends State<EditDeviceDialog> {
 
             // Role Dropdown actualizado
             DropdownButtonFormField<String>(
-              value: selectedRole,
+              initialValue: selectedRole,
               decoration: InputDecoration(
                 labelText: 'Role',
                 labelStyle: const TextStyle(fontSize: 16, color: Colors.black),
