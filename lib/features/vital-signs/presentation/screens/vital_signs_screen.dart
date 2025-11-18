@@ -7,6 +7,7 @@ import 'package:pet_tracker/features/vital-signs/presentation/widgets/bpm_tips_l
 import 'package:pet_tracker/features/vital-signs/presentation/widgets/prediction_button.dart';
 import 'package:pet_tracker/features/vital-signs/presentation/widgets/spo2_chart.dart';
 import 'package:pet_tracker/features/vital-signs/presentation/widgets/spo2_tips_list.dart';
+import 'diseases_tab.dart';
 
 class HealthSummaryScreen extends ConsumerStatefulWidget {
   const HealthSummaryScreen({super.key});
@@ -22,7 +23,7 @@ class _HealthSummaryScreenState extends ConsumerState<HealthSummaryScreen>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 2, vsync: this);
+    _tabController = TabController(length: 3, vsync: this);
   }
 
   @override
@@ -44,6 +45,7 @@ class _HealthSummaryScreenState extends ConsumerState<HealthSummaryScreen>
           tabs: const [
             Tab(text: 'Heart Rate (BPM)'),
             Tab(text: 'Saturation (SpO2)'),
+            Tab(text: 'Diseases'),
           ],
         ),
       ),
@@ -115,6 +117,9 @@ class _HealthSummaryScreenState extends ConsumerState<HealthSummaryScreen>
               ),
             ),
           ),
+
+          // Tab 3: Diseases
+          DiseasesTab(petId: 0), // TODO: Reemplazar con el petId real
         ],
       ),
     );
