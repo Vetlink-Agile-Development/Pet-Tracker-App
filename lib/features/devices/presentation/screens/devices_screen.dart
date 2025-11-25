@@ -96,6 +96,9 @@ class DevicesScreen extends ConsumerWidget {
                               onEditDevice: () {
                                 showEditDeviceDialog(context, device, userId.toString());
                               },
+                              onUnassignDevice: () {
+                                showUnassignDeviceDialog(context, ref, device, userId.toString());
+                              },
                             );
                           },
                         );
@@ -156,6 +159,96 @@ class DevicesScreen extends ConsumerWidget {
         return EditDeviceDialog(
           device: device,
           userId: userId,
+        );
+      },
+    );
+  }
+
+  void showUnassignDeviceDialog(BuildContext context, WidgetRef ref, Device device, String userId) {
+    showDialog(
+      context: context,
+      builder: (BuildContext dialogContext) {
+        return AlertDialog(
+          title: const Text(
+            'Unassign Device',
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Are you sure you want to unassign this device from your account?',
+                style: TextStyle(fontSize: 16),
+              ),
+              const SizedBox(height: 16),
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.grey[100],
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        const Icon(Icons.pets, color: Color(0xFF08273A)),
+                        const SizedBox(width: 8),
+                        Text(
+                          device.nickname,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      'Care Mode: ${device.careMode}',
+                      style: TextStyle(color: Colors.grey[600]),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 16),
+              const Text(
+                'This action cannot be undone.',
+                style: TextStyle(
+                  color: Colors.red,
+                  fontStyle: FontStyle.italic,
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(dialogContext).pop();
+              },
+              child: const Text(
+                'Cancel',
+                style: TextStyle(color: Colors.grey),
+              ),
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                Navigator.of(dialogContext).pop();
+                await ref.read(deviceProvider(userId).notifier).unassignDevice(
+                      context,
+                      device.petTrackerDeviceRecordId,
+                      userId,
+                    );
+                ref.refresh(deviceProvider(userId));
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.red,
+                foregroundColor: Colors.white,
+              ),
+              child: const Text('Unassign'),
+            ),
+          ],
         );
       },
     );

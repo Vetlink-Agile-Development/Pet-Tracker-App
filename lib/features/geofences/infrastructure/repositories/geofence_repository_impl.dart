@@ -21,4 +21,9 @@ class GeofenceRepositoryImpl implements GeofenceRepository {
   Future<Geofence> updateGeofence(Geofence geofence) async {
     return  await datasource.updateGeofence(geofence);
   }
+  
+  @override
+  Future<void> deleteGeofence(int geofenceId) async {
+    return await datasource.deleteGeofence(geofenceId);
+  }
 }

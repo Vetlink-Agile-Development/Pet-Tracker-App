@@ -33,4 +33,9 @@ class DeviceRepositoryImpl extends DeviceRepository {
       deviceRecordId,
     );
   }
+  
+  @override
+  Future<Device> unassignDeviceFromUser(String deviceRecordId, String userId) {
+    return datasource.unassignDeviceFromUser(deviceRecordId, userId);
+  }
 }

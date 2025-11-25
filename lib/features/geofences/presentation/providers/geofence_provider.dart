@@ -106,6 +106,15 @@ class GeofenceNotifier extends StateNotifier<GeofenceState> {
       state = state.copyWith(errorMessage: e.toString());
     }
   }
+
+  Future<void> deleteGeofence(int geofenceId) async {
+    try {
+      await repository.deleteGeofence(geofenceId);
+      await loadGeofences();
+    } catch (e) {
+      state = state.copyWith(errorMessage: e.toString());
+    }
+  }
 }
 
 final geofenceProvider =
