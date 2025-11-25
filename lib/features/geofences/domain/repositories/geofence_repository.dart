@@ -4,4 +4,5 @@ abstract class GeofenceRepository {
   Future<Geofence> createGeofence(Geofence geofence);
   Future<List<Geofence>> fetchGeofences(String selectedDeviceRecordId);
   Future<Geofence> updateGeofence(Geofence geofence);
+  Future<void> deleteGeofence(int geofenceId);
 }

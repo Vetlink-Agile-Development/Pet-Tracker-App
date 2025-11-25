@@ -128,4 +128,21 @@ class GeofenceDatasourceImpl implements GeofenceDatasource {
       throw Exception('Error updating geofence: ${e.response?.data ?? e.message}');
     }
   }
+  
+  @override
+  Future<void> deleteGeofence(int geofenceId) async {
+    try {
+      final token = await storageService.getValue<String>('token');
+      if (token == null) {
+        print('>>> Token not found');
+        throw Exception('Token not found');
+      }
+      await dio.delete(
+        '/geo-fences/$geofenceId',
+        options: Options(headers: {'Authorization': 'Bearer $token'}),
+      );
+    } on DioException catch (e) {
+      throw Exception('Error deleting geofence: ${e.response?.data ?? e.message}');
+    }
+  }
 }
