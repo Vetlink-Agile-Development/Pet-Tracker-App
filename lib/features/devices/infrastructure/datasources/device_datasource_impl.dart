@@ -47,6 +47,33 @@ class DeviceDatasourceImpl extends DeviceDatasource {
     }
   }
 
+    
+  @override
+  Future<Device> unassignDeviceFromUser(String deviceRecordId, String userId) async {
+    try {
+      final token = await storageService.getValue<String>('token');
+      if (token == null) throw Exception('Token not found');
+
+      final response = await dio.post(
+        '/devices/unassign',
+        data: {
+          'petTrackerDeviceRecordId': deviceRecordId,
+          'userId': int.parse(userId),
+        },
+        options: Options(headers: {'Authorization': 'Bearer $token'}),
+      );
+
+      return DeviceMapper.fromJson(response.data);
+    } on DioException catch (e) {
+      final errorMessage =
+          e.response?.data['message'] ?? 'Error unassigning device';
+      throw DioException(
+          requestOptions: e.requestOptions,
+          response: e.response,
+          error: errorMessage);
+    }
+  }
+
   @override
   Future<List<Device>> getAllDevices(String userId) async {
     try {

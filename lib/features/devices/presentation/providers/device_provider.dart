@@ -65,6 +65,44 @@ class DeviceNotifier extends StateNotifier<AsyncValue<List<Device>>> {
       state = AsyncValue.error(e, stackTrace);
     }
   }
+
+  Future<void> unassignDevice(
+      BuildContext context, String deviceRecordId, String userId) async {
+    try {
+      await repository.unassignDeviceFromUser(deviceRecordId, userId);
+
+      // Remover el dispositivo de la lista
+      state = state.whenData((devices) {
+        return devices
+            .where((d) => d.petTrackerDeviceRecordId != deviceRecordId)
+            .toList();
+      });
+
+      // Limpiar el dispositivo seleccionado si era el que se desvinculó
+      final selectedDeviceId = await getSelectedDeviceId();
+      if (selectedDeviceId == deviceRecordId) {
+        await storageService.removeKey('selectedDeviceRecordId');
+        await storageService.removeKey('selectedApiKey');
+      }
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Device unassigned successfully'),
+          backgroundColor: Colors.green,
+        ),
+      );
+    } catch (e, stackTrace) {
+      print("Error al desvincular el dispositivo: $e");
+      state = AsyncValue.error(e, stackTrace);
+      
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error: ${e.toString()}'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
 }
 
 class DeviceAssignNotifier extends StateNotifier<AsyncValue<void>> {

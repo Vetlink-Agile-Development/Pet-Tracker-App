@@ -6,6 +6,7 @@ class DeviceCard extends StatelessWidget {
   final String? selectedDeviceId;
   final VoidCallback onSelectDevice;
   final VoidCallback onEditDevice;
+  final VoidCallback onUnassignDevice;
 
   const DeviceCard({
     super.key,
@@ -13,6 +14,7 @@ class DeviceCard extends StatelessWidget {
     required this.selectedDeviceId,
     required this.onSelectDevice,
     required this.onEditDevice,
+    required this.onUnassignDevice,
   });
 
   @override
@@ -79,6 +81,8 @@ class DeviceCard extends StatelessWidget {
                 onSelectDevice();
               } else if (value == 'edit') {
                 onEditDevice();
+              } else if (value == 'unassign') {
+                onUnassignDevice();
               }
             },
             itemBuilder: (context) => [
@@ -89,6 +93,16 @@ class DeviceCard extends StatelessWidget {
               const PopupMenuItem(
                 value: 'edit',
                 child: Text('Edit Device'),
+              ),
+              const PopupMenuItem(
+                value: 'unassign',
+                child: Row(
+                  children: [
+                    Icon(Icons.link_off, size: 18, color: Colors.red),
+                    SizedBox(width: 8),
+                    Text('Unassign Device', style: TextStyle(color: Colors.red)),
+                  ],
+                ),
               ),
             ],
           ),
