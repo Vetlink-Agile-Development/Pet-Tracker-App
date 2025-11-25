@@ -105,7 +105,7 @@ class LoginScreen extends ConsumerWidget {
                       ),
                       TextButton(
                         onPressed: () {
-                          // Por ahora no implementamos forgot password
+                          showForgotPasswordDialog(context, ref);
                         },
                         child: const Text(
                           'Forgot your password?',
@@ -120,6 +120,117 @@ class LoginScreen extends ConsumerWidget {
           ],
         ),
       ),
+    );
+  }
+
+  void showForgotPasswordDialog(BuildContext context, WidgetRef ref) {
+    final TextEditingController emailController = TextEditingController();
+    final formKey = GlobalKey<FormState>();
+
+    showDialog(
+      context: context,
+      builder: (BuildContext dialogContext) {
+        return Consumer(
+          builder: (context, ref, child) {
+            final passwordResetState = ref.watch(passwordResetProvider);
+
+            // Escuchar cambios de estado para mostrar mensajes
+            ref.listen(passwordResetProvider, (previous, current) {
+              if (current.isSuccess) {
+                Navigator.of(dialogContext).pop();
+                showSnackBar(
+                  context,
+                  'Password reset email sent successfully. Please check your inbox.',
+                );
+                ref.read(passwordResetProvider.notifier).resetState();
+              } else if (current.errorMessage != null) {
+                showSnackBar(context, current.errorMessage!);
+              }
+            });
+
+            return AlertDialog(
+              title: const Text(
+                'Reset Password',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              content: Form(
+                key: formKey,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Enter your email address and we will send you a link to reset your password.',
+                      style: TextStyle(fontSize: 14),
+                    ),
+                    const SizedBox(height: 20),
+                    TextFormField(
+                      controller: emailController,
+                      keyboardType: TextInputType.emailAddress,
+                      decoration: const InputDecoration(
+                        labelText: 'Email',
+                        border: OutlineInputBorder(),
+                        prefixIcon: Icon(Icons.email),
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter your email';
+                        }
+                        if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
+                            .hasMatch(value)) {
+                          return 'Please enter a valid email';
+                        }
+                        return null;
+                      },
+                      enabled: !passwordResetState.isLoading,
+                    ),
+                  ],
+                ),
+              ),
+              actions: [
+                TextButton(
+                  onPressed: passwordResetState.isLoading
+                      ? null
+                      : () {
+                          emailController.dispose();
+                          Navigator.of(dialogContext).pop();
+                        },
+                  child: const Text(
+                    'Cancel',
+                    style: TextStyle(color: Colors.grey),
+                  ),
+                ),
+                ElevatedButton(
+                  onPressed: passwordResetState.isLoading
+                      ? null
+                      : () {
+                          if (formKey.currentState!.validate()) {
+                            ref
+                                .read(passwordResetProvider.notifier)
+                                .sendPasswordResetEmail(emailController.text.trim());
+                          }
+                        },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF08273A),
+                    foregroundColor: Colors.white,
+                  ),
+                  child: passwordResetState.isLoading
+                      ? const SizedBox(
+                          height: 20,
+                          width: 20,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            valueColor:
+                                AlwaysStoppedAnimation<Color>(Colors.white),
+                          ),
+                        )
+                      : const Text('Send Reset Link'),
+                ),
+              ],
+            );
+          },
+        );
+      },
     );
   }
 }
