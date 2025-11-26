@@ -24,16 +24,16 @@ class _AddDeviceDialogState extends State<AddDeviceDialog> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              'Add Device',
+              'Agregar Dispositivo',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
             TextFormField(
               controller: deviceIdController,
               decoration: InputDecoration(
-                labelText: 'Device ID',
+                labelText: 'ID del Dispositivo',
                 labelStyle: TextStyle(fontSize: 14, color: Colors.grey[600]),
-                hintText: 'Enter a Device ID...',
+                hintText: 'Ingresa un ID de Dispositivo...',
                 hintStyle: const TextStyle(fontSize: 14, color: Colors.grey),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
@@ -52,7 +52,7 @@ class _AddDeviceDialogState extends State<AddDeviceDialog> {
                 TextButton(
                   onPressed: () => Navigator.of(context).pop(),
                   child: const Text(
-                    'Cancel',
+                    'Cancelar',
                     style: TextStyle(color: Colors.grey, fontSize: 14),
                   ),
                 ),
@@ -69,7 +69,7 @@ class _AddDeviceDialogState extends State<AddDeviceDialog> {
                           } else {
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
-                                content: Text('Please enter a Device ID',
+                                content: Text('Por favor ingresa un ID de Dispositivo',
                                     style: TextStyle(fontSize: 14)),
                               ),
                             );
@@ -98,7 +98,7 @@ class _AddDeviceDialogState extends State<AddDeviceDialog> {
                             strokeWidth: 2,
                           ),
                         )
-                      : const Text('Accept', style: TextStyle(fontSize: 14)),
+                      : const Text('Aceptar', style: TextStyle(fontSize: 14)),
                 ),
               ],
             ),

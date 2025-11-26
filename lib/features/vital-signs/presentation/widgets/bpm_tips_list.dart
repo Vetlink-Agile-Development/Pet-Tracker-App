@@ -10,28 +10,28 @@ class BpmTipsListWidget extends StatelessWidget {
       icon: Icons.warning_amber,
       color: Colors.orange,
       text:
-          'Low heart rate. May indicate fatigue, bradycardia, or medical issues. Veterinary advice recommended.',
+          'Frecuencia cardíaca baja. Puede indicar fatiga, bradicardia o problemas médicos. Se recomienda consultar al veterinario.',
     ),
     TipItem(
       range: '60 - 100 BPM',
       icon: Icons.favorite,
       color: Colors.green,
       text:
-          'Normal resting heart rate. Your pet appears to be healthy and relaxed.',
+          'Frecuencia cardíaca en reposo normal. Tu mascota parece estar saludable y relajada.',
     ),
     TipItem(
       range: '101 - 140 BPM',
       icon: Icons.monitor_heart,
       color: Colors.yellow,
       text:
-          'Slightly elevated. Could be caused by excitement, physical activity, or stress.',
+          'Ligeramente elevada. Podría ser causada por emoción, actividad física o estrés.',
     ),
     TipItem(
       range: '> 140 BPM',
       icon: Icons.heart_broken,
       color: Colors.red,
       text:
-          'High heart rate. May indicate fever, pain, or serious heart conditions. Seek immediate attention.',
+          'Frecuencia cardíaca alta. Puede indicar fiebre, dolor o condiciones cardíacas graves. Busca atención inmediata.',
     ),
   ];
 

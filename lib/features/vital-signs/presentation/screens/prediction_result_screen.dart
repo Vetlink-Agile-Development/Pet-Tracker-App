@@ -20,18 +20,18 @@ class PredictionResultScreen extends StatelessWidget {
         ? predictions.first.date.month
         : DateTime.now().month;
     final monthName = [
-      'January',
-      'February',
-      'March',
-      'April',
-      'May',
-      'June',
-      'July',
-      'August',
-      'September',
-      'October',
-      'November',
-      'December'
+      'Enero',
+      'Febrero',
+      'Marzo',
+      'Abril',
+      'Mayo',
+      'Junio',
+      'Julio',
+      'Agosto',
+      'Septiembre',
+      'Octubre',
+      'Noviembre',
+      'Diciembre'
     ][month - 1];
     final year = predictions.isNotEmpty
         ? predictions.first.date.year
@@ -42,7 +42,7 @@ class PredictionResultScreen extends StatelessWidget {
       return FlSpot(date.millisecondsSinceEpoch.toDouble(), value.toDouble());
     }).toList();
 
-    final title = dataType == 'bpm' ? 'Predicted Heart Rate' : 'Predicted SpO₂';
+    final title = dataType == 'bpm' ? 'Frecuencia Cardíaca Predicha' : 'SpO₂ Predicha';
     final color = dataType == 'bpm' ? Colors.red : Colors.green;
 
     return Scaffold(
@@ -61,7 +61,7 @@ class PredictionResultScreen extends StatelessWidget {
             Expanded(
               child: predictions.isEmpty
                   ? Text(
-                      'There is not enough data to generate the $title for the next month')
+                      'No hay suficientes datos para generar $title para el próximo mes')
                   : LineChart(
                       LineChartData(
                         minY: dataType == 'bpm' ? 45 : 90,
@@ -118,7 +118,7 @@ class PredictionResultScreen extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             const Text(
-                'These predictions are generated using machine learning models trained on your pet’s data.',
+                'Estas predicciones se generan utilizando modelos de aprendizaje automático entrenados con los datos de tu mascota.',
                 textAlign: TextAlign.center,
                 style: TextStyle(color: Colors.grey)),
           ],

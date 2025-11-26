@@ -59,7 +59,7 @@ class _EditDeviceDialogState extends State<EditDeviceDialog> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              'Edit Device',
+              'Editar Dispositivo',
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
@@ -78,7 +78,7 @@ class _EditDeviceDialogState extends State<EditDeviceDialog> {
             TextFormField(
               controller: nameController,
               decoration: InputDecoration(
-                labelText: 'Device Name',
+                labelText: 'Nombre del Dispositivo',
                 border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
               ),
             ),
@@ -88,7 +88,7 @@ class _EditDeviceDialogState extends State<EditDeviceDialog> {
             DropdownButtonFormField<String>(
               initialValue: selectedRole,
               decoration: InputDecoration(
-                labelText: 'Role',
+                labelText: 'Rol',
                 labelStyle: const TextStyle(fontSize: 16, color: Colors.black),
                 border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
                 contentPadding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
@@ -117,7 +117,7 @@ class _EditDeviceDialogState extends State<EditDeviceDialog> {
               children: [
                 TextButton(
                   onPressed: () => Navigator.of(context).pop(),
-                  child: const Text('Cancel', style: TextStyle(color: Colors.grey)),
+                  child: const Text('Cancelar', style: TextStyle(color: Colors.grey)),
                 ),
                 Consumer(
                   builder: (context, ref, child) {
@@ -141,7 +141,7 @@ class _EditDeviceDialogState extends State<EditDeviceDialog> {
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                         minimumSize: const Size(100, 0),
                       ),
-                      child: const Text('Save'),
+                      child: const Text('Guardar'),
                     );
                   },
                 ),

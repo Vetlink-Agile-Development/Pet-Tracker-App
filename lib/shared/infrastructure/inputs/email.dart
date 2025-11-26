@@ -17,9 +17,9 @@ class Email extends FormzInput<String, EmailError> {
   String? get errorMessage {
     if (isValid || isPure) return null;
 
-    if (displayError == EmailError.empty) return 'The field is empty';
+    if (displayError == EmailError.empty) return 'El campo está vacío';
     if (displayError == EmailError.format) {
-      return 'The email format is invalid';
+      return 'El formato del correo es inválido';
     }
 
     return null;

@@ -68,7 +68,7 @@ class GeofenceDetailsScreenState extends ConsumerState<GeofenceDetailsScreen> {
     if (deviceRecordId == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text("Device ID not found. Please select a device."),
+          content: Text("ID de dispositivo no encontrado. Por favor selecciona un dispositivo."),
           backgroundColor: Colors.red,
         ),
       );
@@ -100,8 +100,8 @@ class GeofenceDetailsScreenState extends ConsumerState<GeofenceDetailsScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
               content: Text(widget.isEditMode
-                  ? 'Geofence updated successfully'
-                  : 'Geofence created successfully')),
+                  ? 'Geocerca actualizada exitosamente'
+                  : 'Geocerca creada exitosamente')),
         );
         context.go('/geofences');
       }
@@ -110,7 +110,7 @@ class GeofenceDetailsScreenState extends ConsumerState<GeofenceDetailsScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
-                'Failed to ${widget.isEditMode ? "update" : "create"} geofence: $error'),
+                'Error al ${widget.isEditMode ? "actualizar" : "crear"} geocerca: $error'),
             backgroundColor: Colors.red,
           ),
         );
@@ -128,7 +128,7 @@ class GeofenceDetailsScreenState extends ConsumerState<GeofenceDetailsScreen> {
       builder: (BuildContext dialogContext) {
         return AlertDialog(
           title: const Text(
-            'Delete Geofence',
+            'Eliminar Geocerca',
             style: TextStyle(fontWeight: FontWeight.bold),
           ),
           content: Column(
@@ -136,7 +136,7 @@ class GeofenceDetailsScreenState extends ConsumerState<GeofenceDetailsScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text(
-                'Are you sure you want to delete this geofence?',
+                '¿Estás seguro de que quieres eliminar esta geocerca?',
                 style: TextStyle(fontSize: 16),
               ),
               const SizedBox(height: 16),
@@ -166,7 +166,7 @@ class GeofenceDetailsScreenState extends ConsumerState<GeofenceDetailsScreen> {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      'Status: ${widget.geofence?.geoFenceStatus ?? "ACTIVE"}',
+                      'Estado: ${widget.geofence?.geoFenceStatus ?? "ACTIVE"}',
                       style: TextStyle(color: Colors.grey[600]),
                     ),
                   ],
@@ -174,7 +174,7 @@ class GeofenceDetailsScreenState extends ConsumerState<GeofenceDetailsScreen> {
               ),
               const SizedBox(height: 16),
               const Text(
-                'This action cannot be undone.',
+                'Esta acción no se puede deshacer.',
                 style: TextStyle(
                   color: Colors.red,
                   fontStyle: FontStyle.italic,
@@ -188,7 +188,7 @@ class GeofenceDetailsScreenState extends ConsumerState<GeofenceDetailsScreen> {
                 Navigator.of(dialogContext).pop();
               },
               child: const Text(
-                'Cancel',
+                'Cancelar',
                 style: TextStyle(color: Colors.grey),
               ),
             ),
@@ -201,7 +201,7 @@ class GeofenceDetailsScreenState extends ConsumerState<GeofenceDetailsScreen> {
                 backgroundColor: Colors.red,
                 foregroundColor: Colors.white,
               ),
-              child: const Text('Delete'),
+              child: const Text('Eliminar'),
             ),
           ],
         );
@@ -218,7 +218,7 @@ class GeofenceDetailsScreenState extends ConsumerState<GeofenceDetailsScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('Geofence deleted successfully'),
+            content: Text('Geocerca eliminada exitosamente'),
             backgroundColor: Colors.green,
           ),
         );
@@ -228,7 +228,7 @@ class GeofenceDetailsScreenState extends ConsumerState<GeofenceDetailsScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to delete geofence: $error'),
+            content: Text('Error al eliminar geocerca: $error'),
             backgroundColor: Colors.red,
           ),
         );
@@ -262,7 +262,7 @@ class GeofenceDetailsScreenState extends ConsumerState<GeofenceDetailsScreen> {
           },
         ),
         title: Text(
-          widget.isEditMode ? 'Edit Geofence' : 'Create Geofence',
+          widget.isEditMode ? 'Editar Geocerca' : 'Crear Geocerca',
           style: const TextStyle(fontSize: 18),
         ),
         actions: widget.isEditMode
@@ -291,7 +291,7 @@ class GeofenceDetailsScreenState extends ConsumerState<GeofenceDetailsScreen> {
               TextField(
                 controller: _nameController,
                 enabled: _isEditing || !widget.isEditMode,
-                decoration: const InputDecoration(labelText: 'Name'),
+                decoration: const InputDecoration(labelText: 'Nombre'),
               ),
               const SizedBox(height: 20),
               DropdownButtonFormField<String>(
@@ -299,13 +299,13 @@ class GeofenceDetailsScreenState extends ConsumerState<GeofenceDetailsScreen> {
                 items: const [
                   DropdownMenuItem(
                     value: 'ACTIVE',
-                    child: Text('Active',
+                    child: Text('Activo',
                         style: TextStyle(
                             fontSize: 16, fontWeight: FontWeight.normal)),
                   ),
                   DropdownMenuItem(
                     value: 'INACTIVE',
-                    child: Text('Inactive',
+                    child: Text('Inactivo',
                         style: TextStyle(
                             fontSize: 16, fontWeight: FontWeight.normal)),
                   ),
@@ -317,7 +317,7 @@ class GeofenceDetailsScreenState extends ConsumerState<GeofenceDetailsScreen> {
                         });
                       }
                     : null,
-                decoration: const InputDecoration(labelText: 'Geofence Status'),
+                decoration: const InputDecoration(labelText: 'Estado de Geocerca'),
               ),
               const SizedBox(height: 20),
               Center(
@@ -340,7 +340,7 @@ class GeofenceDetailsScreenState extends ConsumerState<GeofenceDetailsScreen> {
                                 []);
                           });
                         },
-                        child: const Text('Cancel'),
+                        child: const Text('Cancelar'),
                       ),
                     const SizedBox(width: 10),
                     ElevatedButton(
@@ -348,8 +348,8 @@ class GeofenceDetailsScreenState extends ConsumerState<GeofenceDetailsScreen> {
                           ? _saveChanges
                           : _toggleEditing,
                       child: Text(_isEditing || !widget.isEditMode
-                          ? 'Save changes'
-                          : 'Edit geofence'),
+                          ? 'Guardar cambios'
+                          : 'Editar geocerca'),
                     ),
                   ],
                 ),
@@ -369,7 +369,7 @@ class GeofenceDetailsScreenState extends ConsumerState<GeofenceDetailsScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text(
-          'Coordinates:',
+          'Coordenadas:',
           style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 10),
@@ -390,7 +390,7 @@ class GeofenceDetailsScreenState extends ConsumerState<GeofenceDetailsScreen> {
                   ),
                   TextButton(
                     onPressed: () => _removeCoordinate(index),
-                    child: const Text('Eliminate'),
+                    child: const Text('Eliminar'),
                   ),
                 ],
               ),

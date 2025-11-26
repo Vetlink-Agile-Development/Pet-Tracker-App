@@ -24,11 +24,11 @@ class SelectDeviceDialog extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              'Select Device',
+              'Seleccionar Dispositivo',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
-            Text('You are selecting the "${device.nickname}" device.'),
+            Text('Estás seleccionando el dispositivo "${device.nickname}".'),
             const SizedBox(height: 16),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -36,7 +36,7 @@ class SelectDeviceDialog extends StatelessWidget {
                 TextButton(
                   onPressed: () => Navigator.of(context).pop(),
                   child: const Text(
-                    'Cancel',
+                    'Cancelar',
                     style: TextStyle(color: Colors.grey),
                   ),
                 ),
@@ -54,7 +54,7 @@ class SelectDeviceDialog extends StatelessWidget {
                     ),
                     minimumSize: const Size(100, 0),
                   ),
-                  child: const Text('Select'),
+                  child: const Text('Seleccionar'),
                 ),
               ],
             ),

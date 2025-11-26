@@ -39,11 +39,11 @@ class CustomBottomNavBar extends ConsumerWidget {
       items: const [
         BottomNavigationBarItem(
           icon: Icon(Icons.home),
-          label: 'Home',
+          label: 'Inicio',
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.notifications),
-          label: 'Activities',
+          label: 'Actividades',
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.chat),
@@ -51,11 +51,11 @@ class CustomBottomNavBar extends ConsumerWidget {
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.favorite),
-          label: 'Vital signs',
+          label: 'Signos vitales',
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.map),
-          label: 'Geofences',
+          label: 'Geocercas',
         ),
       ],
     );

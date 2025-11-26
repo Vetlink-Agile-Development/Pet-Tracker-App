@@ -34,7 +34,7 @@ class DevicesScreen extends ConsumerWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const Text(
-                  'Devices',
+                  'Dispositivos',
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
                 ElevatedButton.icon(
@@ -42,7 +42,7 @@ class DevicesScreen extends ConsumerWidget {
                     showAddDeviceDialog(context, ref, userId.toString());
                   },
                   icon: const Icon(Icons.add),
-                  label: const Text('Add'),
+                  label: const Text('Agregar'),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF08273A),
                     foregroundColor: Colors.white,
@@ -71,7 +71,7 @@ class DevicesScreen extends ConsumerWidget {
                   ),
                   data: (devices) {
                     if (devices.isEmpty) {
-                      return const Center(child: Text('No devices found'));
+                      return const Center(child: Text('No se encontraron dispositivos'));
                     }
 
                     return FutureBuilder<String?>(
@@ -170,7 +170,7 @@ class DevicesScreen extends ConsumerWidget {
       builder: (BuildContext dialogContext) {
         return AlertDialog(
           title: const Text(
-            'Unassign Device',
+            'Desvincular Dispositivo',
             style: TextStyle(fontWeight: FontWeight.bold),
           ),
           content: Column(
@@ -178,7 +178,7 @@ class DevicesScreen extends ConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text(
-                'Are you sure you want to unassign this device from your account?',
+                '¿Estás seguro de que quieres desvincular este dispositivo de tu cuenta?',
                 style: TextStyle(fontSize: 16),
               ),
               const SizedBox(height: 16),
@@ -206,7 +206,7 @@ class DevicesScreen extends ConsumerWidget {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      'Care Mode: ${device.careMode}',
+                      'Modo de cuidado: ${device.careMode}',
                       style: TextStyle(color: Colors.grey[600]),
                     ),
                   ],
@@ -214,7 +214,7 @@ class DevicesScreen extends ConsumerWidget {
               ),
               const SizedBox(height: 16),
               const Text(
-                'This action cannot be undone.',
+                'Esta acción no se puede deshacer.',
                 style: TextStyle(
                   color: Colors.red,
                   fontStyle: FontStyle.italic,
@@ -228,7 +228,7 @@ class DevicesScreen extends ConsumerWidget {
                 Navigator.of(dialogContext).pop();
               },
               child: const Text(
-                'Cancel',
+                'Cancelar',
                 style: TextStyle(color: Colors.grey),
               ),
             ),
@@ -246,7 +246,7 @@ class DevicesScreen extends ConsumerWidget {
                 backgroundColor: Colors.red,
                 foregroundColor: Colors.white,
               ),
-              child: const Text('Unassign'),
+              child: const Text('Desvincular'),
             ),
           ],
         );

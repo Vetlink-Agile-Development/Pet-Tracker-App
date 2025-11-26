@@ -13,9 +13,9 @@ class DiseaseListScreen extends ConsumerWidget {
     // VERSIÓN LOCAL: usar provider local
     final diseases = ref.watch(diseaseLocalProvider);
     return Scaffold(
-      appBar: AppBar(title: const Text('Diseases')),
+      appBar: AppBar(title: const Text('Enfermedades')),
       body: diseases.isEmpty
-          ? const Center(child: Text('No diseases found.'))
+          ? const Center(child: Text('No se encontraron enfermedades.'))
           : ListView.separated(
               padding: const EdgeInsets.all(16),
               itemCount: diseases.length,
@@ -26,7 +26,7 @@ class DiseaseListScreen extends ConsumerWidget {
                   leading: const Icon(Icons.medical_services),
                   title: Text(disease['name'] ?? ''),
                   subtitle: Text(
-                    'Diagnosed: ${disease['diagnosisDate'] ?? ''}',
+                    'Diagnosticado: ${disease['diagnosisDate'] ?? ''}',
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
                   onTap: () async {

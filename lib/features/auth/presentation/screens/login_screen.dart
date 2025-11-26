@@ -62,7 +62,7 @@ class LoginScreen extends ConsumerWidget {
                       const Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
-                          "Sign in to",
+                          "Iniciar sesión en",
                           style: TextStyle(
                               fontSize: 20,
                               color: Colors.black87,
@@ -89,7 +89,7 @@ class LoginScreen extends ConsumerWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           const Text(
-                            "Don't have an account?",
+                            "¿No tienes una cuenta?",
                             style: TextStyle(color: Colors.black54),
                           ),
                           TextButton(
@@ -97,7 +97,7 @@ class LoginScreen extends ConsumerWidget {
                               context.push('/register');
                             },
                             child: const Text(
-                              'Sign up here',
+                              'Regístrate aquí',
                               style: TextStyle(color: Colors.blue),
                             ),
                           ),
@@ -108,7 +108,7 @@ class LoginScreen extends ConsumerWidget {
                           showForgotPasswordDialog(context, ref);
                         },
                         child: const Text(
-                          'Forgot your password?',
+                          '¿Olvidaste tu contraseña?',
                           style: TextStyle(color: Colors.blue),
                         ),
                       ),
@@ -140,7 +140,7 @@ class LoginScreen extends ConsumerWidget {
                 Navigator.of(dialogContext).pop();
                 showSnackBar(
                   context,
-                  'Password reset email sent successfully. Please check your inbox.',
+                  'Correo de restablecimiento enviado exitosamente. Por favor revisa tu bandeja de entrada.',
                 );
                 ref.read(passwordResetProvider.notifier).resetState();
               } else if (current.errorMessage != null) {
@@ -150,7 +150,7 @@ class LoginScreen extends ConsumerWidget {
 
             return AlertDialog(
               title: const Text(
-                'Reset Password',
+                'Restablecer Contraseña',
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
               content: Form(
@@ -160,7 +160,7 @@ class LoginScreen extends ConsumerWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text(
-                      'Enter your email address and we will send you a link to reset your password.',
+                      'Ingresa tu dirección de correo electrónico y te enviaremos un enlace para restablecer tu contraseña.',
                       style: TextStyle(fontSize: 14),
                     ),
                     const SizedBox(height: 20),
@@ -174,11 +174,11 @@ class LoginScreen extends ConsumerWidget {
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'Please enter your email';
+                          return 'Por favor ingresa tu correo';
                         }
                         if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
                             .hasMatch(value)) {
-                          return 'Please enter a valid email';
+                          return 'Por favor ingresa un correo válido';
                         }
                         return null;
                       },
@@ -196,7 +196,7 @@ class LoginScreen extends ConsumerWidget {
                           Navigator.of(dialogContext).pop();
                         },
                   child: const Text(
-                    'Cancel',
+                    'Cancelar',
                     style: TextStyle(color: Colors.grey),
                   ),
                 ),
@@ -224,7 +224,7 @@ class LoginScreen extends ConsumerWidget {
                                 AlwaysStoppedAnimation<Color>(Colors.white),
                           ),
                         )
-                      : const Text('Send Reset Link'),
+                      : const Text('Enviar Enlace'),
                 ),
               ],
             );
@@ -241,7 +241,7 @@ class _UsernameInput extends ConsumerWidget {
     final loginForm = ref.watch(loginFormProvider);
 
     return CustomTextFormField(
-      label: 'Username',
+      label: 'Nombre de usuario',
       keyboardType: TextInputType.text,
       onChanged: ref.read(loginFormProvider.notifier).onUsernameChanged,
       errorMessage:
@@ -256,7 +256,7 @@ class _PasswordInput extends ConsumerWidget {
     final loginForm = ref.watch(loginFormProvider);
 
     return CustomTextFormField(
-      label: 'Password',
+      label: 'Contraseña',
       obscureText: true,
       onChanged: ref.read(loginFormProvider.notifier).onPasswordChanged,
       errorMessage:
@@ -273,7 +273,7 @@ class _LoginButton extends ConsumerWidget {
     return SizedBox(
       width: double.infinity,
       child: CustomFilledButton(
-        text: 'Sign in',
+        text: 'Iniciar sesión',
         buttonColor: const Color(0xFF08273A),
         onPressed: loginForm.isPosting
             ? null

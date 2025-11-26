@@ -88,11 +88,11 @@ class DeviceCard extends StatelessWidget {
             itemBuilder: (context) => [
               const PopupMenuItem(
                 value: 'select',
-                child: Text('Select Device'),
+                child: Text('Seleccionar Dispositivo'),
               ),
               const PopupMenuItem(
                 value: 'edit',
-                child: Text('Edit Device'),
+                child: Text('Editar Dispositivo'),
               ),
               const PopupMenuItem(
                 value: 'unassign',
@@ -100,7 +100,7 @@ class DeviceCard extends StatelessWidget {
                   children: [
                     Icon(Icons.link_off, size: 18, color: Colors.red),
                     SizedBox(width: 8),
-                    Text('Unassign Device', style: TextStyle(color: Colors.red)),
+                    Text('Desvincular Dispositivo', style: TextStyle(color: Colors.red)),
                   ],
                 ),
               ),

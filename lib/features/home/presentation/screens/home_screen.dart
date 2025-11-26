@@ -18,7 +18,7 @@ class HomeScreen extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Real Time Monitoring Map',
+          'Mapa de Monitoreo en Tiempo Real',
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
         ),
         backgroundColor: Colors.white,
@@ -30,7 +30,7 @@ class HomeScreen extends ConsumerWidget {
             return const Center(child: CircularProgressIndicator());
           }
           if (!snapshot.hasData || snapshot.data == 'No token found') {
-            return const Center(child: Text("Failed to load Map Token"));
+            return const Center(child: Text("Error al cargar el Token del Mapa"));
           }
 
           final mapboxToken = snapshot.data!;
@@ -127,7 +127,7 @@ class HomeScreen extends ConsumerWidget {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Text(
-                              'Risk Level: ${currentLocation.riskLevel}',
+                              'Nivel de Riesgo: ${currentLocation.riskLevel}',
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
@@ -138,17 +138,17 @@ class HomeScreen extends ConsumerWidget {
                             ),
                             const SizedBox(height: 8),
                             Text(
-                              'Latitude: ${currentLocation.latitude.toStringAsFixed(4)}, '
-                              'Longitude: ${currentLocation.longitude.toStringAsFixed(4)}',
+                              'Latitud: ${currentLocation.latitude.toStringAsFixed(4)}, '
+                              'Longitud: ${currentLocation.longitude.toStringAsFixed(4)}',
                               style: const TextStyle(fontSize: 14),
                             ),
                           ],
                         ),
                         loading: () =>
-                            const Text('Loading current location...'),
+                            const Text('Cargando ubicación actual...'),
                         error: (error, stackTrace) {
                           return const Text(
-                            'If you don\'t see the map, please check if you have selected a device.',
+                            'Si no ves el mapa, por favor verifica si has seleccionado un dispositivo.',
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               fontSize: 16,

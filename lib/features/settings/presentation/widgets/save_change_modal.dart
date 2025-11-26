@@ -14,22 +14,22 @@ class SaveChangesModal extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('Save Changes?'),
-      content: const Text('Do you want to save the changes?'),
+      title: const Text('¿Guardar Cambios?'),
+      content: const Text('¿Quieres guardar los cambios?'),
       actions: [
         TextButton(
           onPressed: () {
             onCancel();
             context.pop();
           },
-          child: const Text('Cancel'),
+          child: const Text('Cancelar'),
         ),
         TextButton(
           onPressed: () {
             onSave();
             context.go('/settings');
           },
-          child: const Text('Save'),
+          child: const Text('Guardar'),
         ),
       ],
     );

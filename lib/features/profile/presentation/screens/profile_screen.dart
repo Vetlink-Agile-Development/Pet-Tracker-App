@@ -13,7 +13,7 @@ class ProfileScreen extends ConsumerWidget {
     final userProfile = authState.userProfile;
 
     if (userProfile == null) {
-      return const Center(child: Text('User not authenticated'));
+      return const Center(child: Text('Usuario no autenticado'));
     }
 
     return Scaffold(
@@ -58,7 +58,7 @@ class ProfileScreen extends ConsumerWidget {
                 context.go('/settings');
               },
               child: const Text(
-                'Edit Profile',
+                'Editar Perfil',
                 style: TextStyle(
                     color: Colors.blue, decoration: TextDecoration.underline),
               ),
@@ -76,7 +76,7 @@ class ProfileScreen extends ConsumerWidget {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
               ),
-              child: const Text('Premium Plan',
+              child: const Text('Plan Premium',
                   style: TextStyle(fontSize: 16, color: Colors.white)),
             ),
           ],

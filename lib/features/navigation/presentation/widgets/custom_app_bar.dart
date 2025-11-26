@@ -119,7 +119,7 @@ class CustomAppBar extends ConsumerWidget implements PreferredSizeWidget {
                             leading:
                                 Icon(Icons.settings, color: Colors.blueGrey),
                             title: Text(
-                              'Settings',
+                              'Ajustes',
                               style: TextStyle(
                                 color: Colors.black87,
                                 fontSize: 14,
@@ -133,7 +133,7 @@ class CustomAppBar extends ConsumerWidget implements PreferredSizeWidget {
                             leading:
                                 Icon(Icons.logout, color: Colors.redAccent),
                             title: Text(
-                              'Logout',
+                              'Cerrar sesión',
                               style: TextStyle(
                                 color: Colors.black87,
                                 fontSize: 14,

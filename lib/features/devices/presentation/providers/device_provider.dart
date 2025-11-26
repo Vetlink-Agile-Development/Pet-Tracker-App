@@ -87,7 +87,7 @@ class DeviceNotifier extends StateNotifier<AsyncValue<List<Device>>> {
 
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Device unassigned successfully'),
+          content: Text('Dispositivo desvinculado exitosamente'),
           backgroundColor: Colors.green,
         ),
       );

@@ -50,21 +50,21 @@ class SettingsScreenState extends ConsumerState<SettingsScreen> {
     final confirmPassword = _confirmPasswordController.text;
 
     if (newPassword.error == PasswordError.empty) {
-      _showSnackBar(context, 'New Password is required');
+      _showSnackBar(context, 'Nueva Contraseña es requerida');
       return;
     }
     if (newPassword.error == PasswordError.length) {
-      _showSnackBar(context, 'New Password must be at least 6 characters');
+      _showSnackBar(context, 'Nueva Contraseña debe tener al menos 6 caracteres');
       return;
     }
     if (newPassword.error == PasswordError.format) {
       _showSnackBar(context,
-          'New Password must contain uppercase, lowercase, and a number');
+          'Nueva Contraseña debe contener mayúscula, minúscula y un número');
       return;
     }
 
     if (newPassword.value != confirmPassword) {
-      _showSnackBar(context, 'New Password and Confirm Password do not match');
+      _showSnackBar(context, 'Nueva Contraseña y Confirmar Contraseña no coinciden');
       return;
     }
 
@@ -106,7 +106,7 @@ class SettingsScreenState extends ConsumerState<SettingsScreen> {
     final userProfile = authState.userProfile;
 
     if (userProfile == null) {
-      return const Center(child: Text('User not authenticated'));
+      return const Center(child: Text('Usuario no autenticado'));
     }
 
     return GestureDetector(
@@ -115,7 +115,7 @@ class SettingsScreenState extends ConsumerState<SettingsScreen> {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Settings',
+          title: const Text('Configuración',
               style: TextStyle(
                   color: Color(0xFF08273A),
                   fontWeight: FontWeight.bold,
@@ -156,7 +156,7 @@ class SettingsScreenState extends ConsumerState<SettingsScreen> {
                             borderRadius: BorderRadius.circular(50),
                           ),
                           child: const Text(
-                            'SELECT IMAGE',
+                            'SELECCIONAR IMAGEN',
                             style: TextStyle(color: Colors.white, fontSize: 12),
                           ),
                         ),
@@ -167,7 +167,7 @@ class SettingsScreenState extends ConsumerState<SettingsScreen> {
                 const SizedBox(height: 16),
 
                 _buildTextField(
-                  label: 'Email',
+                  label: 'Correo electrónico',
                   controller: _emailController,
                   icon: Icons.email,
                   isObscure: false,
@@ -175,7 +175,7 @@ class SettingsScreenState extends ConsumerState<SettingsScreen> {
                 ),
                 const SizedBox(height: 10),
                 _buildPasswordField(
-                  label: 'Password',
+                  label: 'Contraseña',
                   controller: _passwordController,
                   isObscure: _obscurePassword,
                   onToggleVisibility: () {
@@ -186,7 +186,7 @@ class SettingsScreenState extends ConsumerState<SettingsScreen> {
                 ),
                 const SizedBox(height: 10),
                 _buildPasswordField(
-                  label: 'New Password',
+                  label: 'Nueva Contraseña',
                   controller: _newPasswordController,
                   isObscure: _obscureNewPassword,
                   onToggleVisibility: () {
@@ -197,7 +197,7 @@ class SettingsScreenState extends ConsumerState<SettingsScreen> {
                 ),
                 const SizedBox(height: 10),
                 _buildPasswordField(
-                  label: 'Confirm Password',
+                  label: 'Confirmar Contraseña',
                   controller: _confirmPasswordController,
                   isObscure: _obscureConfirmPassword,
                   onToggleVisibility: () {
@@ -208,14 +208,14 @@ class SettingsScreenState extends ConsumerState<SettingsScreen> {
                 ),
                 const SizedBox(height: 10),
                 _buildTextField(
-                  label: 'Name',
+                  label: 'Nombre',
                   controller: _nameController,
                   icon: Icons.person,
                   isObscure: false,
                 ),
                 const SizedBox(height: 10),
                 _buildTextField(
-                  label: 'Surnames',
+                  label: 'Apellidos',
                   controller: _surnameController,
                   icon: Icons.person_outline,
                   isObscure: false,
@@ -235,7 +235,7 @@ class SettingsScreenState extends ConsumerState<SettingsScreen> {
                       borderRadius: BorderRadius.circular(8),
                     ),
                   ),
-                  child: const Text('Save Changes'),
+                  child: const Text('Guardar Cambios'),
                 ),
               ],
             ),

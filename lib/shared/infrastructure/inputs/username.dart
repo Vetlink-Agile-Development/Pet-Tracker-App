@@ -16,8 +16,8 @@ class Username extends FormzInput<String, UsernameError> {
   String? get errorMessage {
     if (isValid || isPure) return null;
 
-    if (displayError == UsernameError.empty) return 'The username is required';
-    if (displayError == UsernameError.tooShort) return 'The username is too short (min 3 characters)';
+    if (displayError == UsernameError.empty) return 'El nombre de usuario es requerido';
+    if (displayError == UsernameError.tooShort) return 'El nombre de usuario es muy corto (mín 3 caracteres)';
     
     return null;
   }

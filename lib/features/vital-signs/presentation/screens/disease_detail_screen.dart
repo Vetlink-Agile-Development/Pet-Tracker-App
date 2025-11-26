@@ -12,19 +12,19 @@ class DiseaseDetailScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
-      appBar: AppBar(title: Text(disease['name'] ?? 'Disease Detail')),
+      appBar: AppBar(title: Text(disease['name'] ?? 'Detalle de Enfermedad')),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Diagnosis Date: ${disease['diagnosisDate'] ?? ''}', style: Theme.of(context).textTheme.titleMedium),
+            Text('Fecha de Diagnóstico: ${disease['diagnosisDate'] ?? ''}', style: Theme.of(context).textTheme.titleMedium),
             const SizedBox(height: 8),
-            Text('Symptoms: ${disease['symptoms'] ?? ''}'),
+            Text('Síntomas: ${disease['symptoms'] ?? ''}'),
             const SizedBox(height: 8),
-            Text('Treatment: ${disease['treatment'] ?? ''}'),
+            Text('Tratamiento: ${disease['treatment'] ?? ''}'),
             const SizedBox(height: 8),
-            Text('Observations: ${disease['observations'] ?? ''}'),
+            Text('Observaciones: ${disease['observations'] ?? ''}'),
             const Spacer(),
             Row(
               children: [

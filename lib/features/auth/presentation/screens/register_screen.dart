@@ -54,7 +54,7 @@ class RegisterScreen extends ConsumerWidget {
                       const Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
-                          "Create your account",
+                          "Crea tu cuenta",
                           style: TextStyle(
                               fontSize: 20,
                               color: Colors.black87,
@@ -72,38 +72,38 @@ class RegisterScreen extends ConsumerWidget {
                       ),
                       const SizedBox(height: 20),
                       CustomTextFormField(
-                        label: 'Username',
+                        label: 'Nombre de usuario',
                         onChanged: registerNotifier.onUsernameChanged,
                         errorMessage: registerForm.isFormPosted ? registerForm.username.errorMessage : null,
                       ),
                       const SizedBox(height: 20),
                       CustomTextFormField(
-                        label: 'Email',
+                        label: 'Correo electrónico',
                         onChanged: registerNotifier.onEmailChanged,
                         errorMessage: registerForm.isFormPosted ? registerForm.email.errorMessage : null,
                       ),
                       const SizedBox(height: 20),
                       CustomTextFormField(
-                        label: 'First Name',
+                        label: 'Nombre',
                         onChanged: registerNotifier.onFirstNameChanged,
                         errorMessage: registerForm.isFormPosted ? registerForm.firstName.errorMessage : null,
                       ),
                       const SizedBox(height: 20),
                       CustomTextFormField(
-                        label: 'Last Name',
+                        label: 'Apellido',
                         onChanged: registerNotifier.onLastNameChanged,
                         errorMessage: registerForm.isFormPosted ? registerForm.lastName.errorMessage : null,
                       ),
                       const SizedBox(height: 20),
                       CustomTextFormField(
-                        label: 'Password',
+                        label: 'Contraseña',
                         obscureText: true,
                         onChanged: registerNotifier.onPasswordChanged,
                         errorMessage: registerForm.isFormPosted ? registerForm.password.errorMessage : null,
                       ),
                       const SizedBox(height: 20),
                       CustomTextFormField(
-                        label: 'Confirm Password',
+                        label: 'Confirmar Contraseña',
                         obscureText: true,
                         onChanged: registerNotifier.onConfirmPasswordChanged,
                         errorMessage: registerForm.isFormPosted ? registerForm.confirmPassword.errorMessage : null,
@@ -112,7 +112,7 @@ class RegisterScreen extends ConsumerWidget {
                       SizedBox(
                         width: double.infinity,
                         child: CustomFilledButton(
-                          text: 'Register',
+                          text: 'Registrarse',
                           buttonColor: const Color(0xFF08273A),
                           onPressed: registerForm.isPosting
                               ? null
@@ -120,7 +120,7 @@ class RegisterScreen extends ConsumerWidget {
                                   await registerNotifier.onFormSubmit();
                                   if (registerForm.isValid) {
                                     if (context.mounted) {
-                                      showSnackBar(context, 'User registered successfully');
+                                      showSnackBar(context, 'Usuario registrado exitosamente');
                                       context.go('/login');
                                     }
                                   }
@@ -132,7 +132,7 @@ class RegisterScreen extends ConsumerWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           const Text(
-                            "Already have an account?",
+                            "¿Ya tienes una cuenta?",
                             style: TextStyle(color: Colors.black54),
                           ),
                           TextButton(
@@ -140,7 +140,7 @@ class RegisterScreen extends ConsumerWidget {
                               context.go('/login');
                             },
                             child: const Text(
-                              'Sign in here',
+                              'Inicia sesión aquí',
                               style: TextStyle(color: Colors.blue),
                             ),
                           ),

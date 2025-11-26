@@ -72,7 +72,7 @@ class _DiseaseFormScreenState extends State<DiseaseFormScreen> {
         _loadingDevices = false;
       });
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error loading devices: ${e.toString()}')),
+        SnackBar(content: Text('Error al cargar dispositivos: ${e.toString()}')),
       );
     }
   }
@@ -113,13 +113,13 @@ class _DiseaseFormScreenState extends State<DiseaseFormScreen> {
         // Edición: actualizar en provider
         container.read(diseaseLocalProvider.notifier).updateDisease(widget.index!, newDisease);
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Disease updated!')),
+          const SnackBar(content: Text('¡Enfermedad actualizada!')),
         );
       } else {
         // Creación: agregar en provider
         container.read(diseaseLocalProvider.notifier).addDisease(newDisease);
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Disease saved locally!')),
+          const SnackBar(content: Text('¡Enfermedad guardada localmente!')),
         );
       }
       Navigator.of(context).pop(newDisease);
@@ -153,7 +153,7 @@ class _DiseaseFormScreenState extends State<DiseaseFormScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(widget.diseaseId == null ? 'Add Disease' : 'Edit Disease')),
+      appBar: AppBar(title: Text(widget.diseaseId == null ? 'Agregar Enfermedad' : 'Editar Enfermedad')),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
@@ -164,7 +164,7 @@ class _DiseaseFormScreenState extends State<DiseaseFormScreen> {
                   ? const Center(child: CircularProgressIndicator())
                   : DropdownButtonFormField<String>(
                       value: _selectedDeviceNickname,
-                      decoration: const InputDecoration(labelText: 'Pet Device'),
+                      decoration: const InputDecoration(labelText: 'Dispositivo de Mascota'),
                       items: _deviceNicknames
                           .map((nickname) => DropdownMenuItem(
                                 value: nickname,
@@ -176,18 +176,18 @@ class _DiseaseFormScreenState extends State<DiseaseFormScreen> {
                           _selectedDeviceNickname = value;
                         });
                       },
-                      validator: (value) => value == null || value.isEmpty ? 'Required' : null,
+                      validator: (value) => value == null || value.isEmpty ? 'Requerido' : null,
                     ),
               const SizedBox(height: 16),
               TextFormField(
                 controller: _nameController,
-                decoration: const InputDecoration(labelText: 'Disease Name'),
-                validator: (value) => value == null || value.isEmpty ? 'Required' : null,
+                decoration: const InputDecoration(labelText: 'Nombre de Enfermedad'),
+                validator: (value) => value == null || value.isEmpty ? 'Requerido' : null,
               ),
               TextFormField(
                 controller: _dateController,
-                decoration: const InputDecoration(labelText: 'Diagnosis Date'),
-                validator: (value) => value == null || value.isEmpty ? 'Required' : null,
+                decoration: const InputDecoration(labelText: 'Fecha de Diagnóstico'),
+                validator: (value) => value == null || value.isEmpty ? 'Requerido' : null,
                 onTap: () async {
                   FocusScope.of(context).requestFocus(FocusNode());
                   final picked = await showDatePicker(
@@ -203,30 +203,30 @@ class _DiseaseFormScreenState extends State<DiseaseFormScreen> {
               ),
               TextFormField(
                 controller: _symptomsController,
-                decoration: const InputDecoration(labelText: 'Symptoms'),
+                decoration: const InputDecoration(labelText: 'Síntomas'),
               ),
               TextFormField(
                 controller: _treatmentController,
-                decoration: const InputDecoration(labelText: 'Treatment'),
+                decoration: const InputDecoration(labelText: 'Tratamiento'),
               ),
               TextFormField(
                 controller: _observationsController,
-                decoration: const InputDecoration(labelText: 'Observations'),
+                decoration: const InputDecoration(labelText: 'Observaciones'),
               ),
               const SizedBox(height: 16),
-              Text('Clinical Report (optional):', style: Theme.of(context).textTheme.bodyMedium),
+              Text('Reporte Clínico (opcional):', style: Theme.of(context).textTheme.bodyMedium),
               const SizedBox(height: 8),
               Row(
                 children: [
                   ElevatedButton.icon(
                     icon: const Icon(Icons.photo),
-                    label: const Text('Gallery'),
+                    label: const Text('Galería'),
                     onPressed: () => _pickImage(ImageSource.gallery),
                   ),
                   const SizedBox(width: 16),
                   ElevatedButton.icon(
                     icon: const Icon(Icons.camera_alt),
-                    label: const Text('Camera'),
+                    label: const Text('Cámara'),
                     onPressed: () => _pickImage(ImageSource.camera),
                   ),
                 ],
@@ -241,7 +241,7 @@ class _DiseaseFormScreenState extends State<DiseaseFormScreen> {
               const SizedBox(height: 24),
               ElevatedButton(
                 onPressed: _submit,
-                child: Text(widget.diseaseId == null ? 'Save' : 'Update'),
+                child: Text(widget.diseaseId == null ? 'Guardar' : 'Actualizar'),
               ),
             ],
           ),

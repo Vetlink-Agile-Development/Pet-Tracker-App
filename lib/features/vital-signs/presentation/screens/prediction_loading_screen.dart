@@ -128,7 +128,7 @@ class _PredictionLoadingScreenState extends State<PredictionLoadingScreen>
             ),
             const SizedBox(height: 20),
             const Text(
-              "Generating prediction...",
+              "Generando predicción...",
               style: TextStyle(fontSize: 18),
             ),
           ],

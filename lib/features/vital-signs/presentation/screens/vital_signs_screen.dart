@@ -38,14 +38,14 @@ class _HealthSummaryScreenState extends ConsumerState<HealthSummaryScreen>
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Monthly Health Summary',
+        title: const Text('Resumen Mensual de Salud',
             style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
         bottom: TabBar(
           controller: _tabController,
           tabs: const [
-            Tab(text: 'Heart Rate (BPM)'),
-            Tab(text: 'Saturation (SpO2)'),
-            Tab(text: 'Diseases'),
+            Tab(text: 'Frecuencia Cardíaca (BPM)'),
+            Tab(text: 'Saturación (SpO2)'),
+            Tab(text: 'Enfermedades'),
           ],
         ),
       ),
@@ -62,23 +62,6 @@ class _HealthSummaryScreenState extends ConsumerState<HealthSummaryScreen>
               child: Column(
                 children: [
                   BpmChartWidget(data: state.summaries),
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 8),
-                    child: PredictButton(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => PredictionLoadingScreen(
-                                dataType: 'bpm',
-                                repository: notifier.repository,
-                                storageService: notifier.storageService,
-                                deviceRepository: notifier.deviceRepository),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
                   const BpmTipsListWidget()
                 ],
               ),
@@ -95,23 +78,6 @@ class _HealthSummaryScreenState extends ConsumerState<HealthSummaryScreen>
               child: Column(
                 children: [
                   Spo2ChartWidget(data: state.summaries),
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 8),
-                    child: PredictButton(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => PredictionLoadingScreen(
-                                dataType: 'spo2',
-                                repository: notifier.repository,
-                                storageService: notifier.storageService,
-                                deviceRepository: notifier.deviceRepository),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
                   const Spo2TipsListWidget()
                 ],
               ),

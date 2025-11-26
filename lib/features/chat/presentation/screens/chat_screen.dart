@@ -33,7 +33,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
   List<ChatMessage> messages = <ChatMessage>[
     ChatMessage(
       text:
-          "Hi, I'm Pet Tracker AI, your virtual assistant for all things pet-related! How can I help you today?",
+          "Hola, soy Pet Tracker AI, tu asistente virtual para todo lo relacionado con mascotas. ¿Cómo puedo ayudarte?",
       user: ChatUser(
         id: 'AI',
         firstName: 'Pet Tracker',

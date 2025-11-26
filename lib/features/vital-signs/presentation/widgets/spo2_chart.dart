@@ -19,18 +19,18 @@ class Spo2ChartWidget extends StatelessWidget {
     final month =
         data.isNotEmpty ? data.first.date.month : DateTime.now().month;
     final monthName = [
-      'January',
-      'February',
-      'March',
-      'April',
-      'May',
-      'June',
-      'July',
-      'August',
-      'September',
-      'October',
-      'November',
-      'December'
+      'Enero',
+      'Febrero',
+      'Marzo',
+      'Abril',
+      'Mayo',
+      'Junio',
+      'Julio',
+      'Agosto',
+      'Septiembre',
+      'Octubre',
+      'Noviembre',
+      'Diciembre'
     ][month - 1];
     final year = data.isNotEmpty ? data.first.date.year : DateTime.now().year;
 

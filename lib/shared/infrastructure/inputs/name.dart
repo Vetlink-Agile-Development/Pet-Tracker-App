@@ -9,8 +9,8 @@ class Name extends FormzInput<String, NameError> {
   String? get errorMessage {
     if (isValid || isPure) return null;
 
-    if (displayError == NameError.empty) return 'The field is required';
-    if (displayError == NameError.tooShort) return 'Minimum 2 characters';
+    if (displayError == NameError.empty) return 'El campo es requerido';
+    if (displayError == NameError.tooShort) return 'Mínimo 2 caracteres';
     return null;
   }
 

@@ -31,7 +31,7 @@ class GeofencesScreenState extends ConsumerState<GeofencesScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'List of geofences',
+          'Lista de geocercas',
           style: TextStyle(fontSize: 20),
         ),
       ),
@@ -49,7 +49,7 @@ class GeofencesScreenState extends ConsumerState<GeofencesScreen> {
                       ),
                       SizedBox(height: 16),
                       Text(
-                        'Geofences not found',
+                        'No se encontraron geocercas',
                         style: TextStyle(
                           fontSize: 18,
                           color: Colors.grey,
