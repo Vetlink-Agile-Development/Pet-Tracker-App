@@ -21,6 +21,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
   ChatUser? user;
   bool isSending = false;
   List<ChatUser> typingUsers = [];
+  String? deviceId;
 
   final ChatUser aiUser = ChatUser(
     id: 'AI',
@@ -52,6 +53,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
   Future<void> _loadUser() async {
     storageService = ref.read(keyValueStorageServiceProvider);
     final userId = await storageService.getValue<String>('userId');
+    deviceId = await storageService.getValue<String>('selectedDeviceRecordId');
     if (userId == null) {
       print('>>> User ID not found');
       throw Exception('User ID not found');
@@ -87,7 +89,8 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
           "new_message": {
             "role": "user",
             "text": message.text,
-          }
+          },
+          "pet_tracker_device_id": deviceId,
         }),
       );
 
