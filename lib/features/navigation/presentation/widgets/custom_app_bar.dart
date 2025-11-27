@@ -61,6 +61,26 @@ class CustomAppBar extends ConsumerWidget implements PreferredSizeWidget {
                 Row(
                   children: [
                     GestureDetector(
+                      onTap: () => context.go('/skin-analysis'),
+                      child: Container(
+                        padding: const EdgeInsets.all(6),
+                        decoration: BoxDecoration(
+                          gradient: const LinearGradient(
+                            colors: [Color(0xFF667EEA), Color(0xFF764BA2)],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          ),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: const Icon(
+                          Icons.auto_awesome,
+                          size: 20,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    GestureDetector(
                       onTap: () => context.go('/devices'),
                       child: SvgPicture.asset(
                         'assets/images/dog-collar.svg',
