@@ -12,6 +12,7 @@ import 'package:pet_tracker/features/home/presentation/screens/screens.dart';
 import 'package:pet_tracker/features/navigation/presentation/screens/main_screen.dart';
 import 'package:pet_tracker/features/profile/presentation/screens/screens.dart';
 import 'package:pet_tracker/features/settings/presentation/screens/screens.dart';
+import 'package:pet_tracker/features/skin-analysis/presentation/screens/screens.dart';
 import 'package:pet_tracker/features/vital-signs/presentation/screens/screens.dart';
 
 final goRouterProvider = Provider((ref) {
@@ -49,7 +50,11 @@ final goRouterProvider = Provider((ref) {
           ),
           GoRoute(
             path: '/chat',
-            builder: (context, state) => const ChatScreen(),
+            builder: (context, state) {
+              final extra = state.extra as Map<String, dynamic>?;
+              final preloadedMessage = extra?['preloadedMessage'] as String?;
+              return ChatScreen(preloadedMessage: preloadedMessage);
+            },
           ),
           GoRoute(
             path: '/vital-signs',
@@ -87,6 +92,10 @@ final goRouterProvider = Provider((ref) {
           GoRoute(
             path: '/settings',
             builder: (context, state) => const SettingsScreen(),
+          ),
+          GoRoute(
+            path: '/skin-analysis',
+            builder: (context, state) => const SkinAnalysisScreen(),
           ),
         ],
       ),

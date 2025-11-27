@@ -8,7 +8,9 @@ import 'package:pet_tracker/shared/infrastructure/services/key_value_storage_pro
 import 'package:pet_tracker/shared/infrastructure/services/key_value_storage_service.dart';
 
 class ChatScreen extends ConsumerStatefulWidget {
-  const ChatScreen({super.key});
+  final String? preloadedMessage;
+  
+  const ChatScreen({super.key, this.preloadedMessage});
 
   @override
   ConsumerState<ChatScreen> createState() => _ChatScreenState();
@@ -22,6 +24,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
   bool isSending = false;
   List<ChatUser> typingUsers = [];
   String? deviceId;
+  final TextEditingController _textController = TextEditingController();
 
   final ChatUser aiUser = ChatUser(
     id: 'AI',
@@ -48,6 +51,17 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
   void initState() {
     super.initState();
     _loadUser();
+    
+    // Set preloaded message if exists
+    if (widget.preloadedMessage != null) {
+      _textController.text = widget.preloadedMessage!;
+    }
+  }
+
+  @override
+  void dispose() {
+    _textController.dispose();
+    super.dispose();
   }
 
   Future<void> _loadUser() async {
@@ -142,6 +156,9 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
         },
         messages: messages,
         typingUsers: typingUsers,
+        inputOptions: InputOptions(
+          textController: _textController,
+        ),
       ),
     );
   }
