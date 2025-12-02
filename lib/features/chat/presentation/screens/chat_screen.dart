@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 import 'package:pet_tracker/shared/infrastructure/services/key_value_storage_provider.dart';
+import 'dart:developer' as developer;
 import 'package:pet_tracker/shared/infrastructure/services/key_value_storage_service.dart';
 
 class ChatScreen extends ConsumerStatefulWidget {
@@ -69,7 +70,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
     final userId = await storageService.getValue<String>('userId');
     deviceId = await storageService.getValue<String>('selectedDeviceRecordId');
     if (userId == null) {
-      print('>>> User ID not found');
+      developer.log('User ID not found', name: 'ChatScreen');
       throw Exception('User ID not found');
     }
 
@@ -126,7 +127,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
         isSending = false;
         typingUsers = [];
       });
-      print('Error sending message: $e');
+      developer.log('Error sending message: $e', name: 'ChatScreen');
     }
   }
 

@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pet_tracker/features/auth/presentation/providers/auth_provider.dart';
 import 'package:pet_tracker/features/devices/domain/domain.dart';
 import 'package:pet_tracker/features/devices/presentation/providers/device_provider.dart';
+import 'package:pet_tracker/features/devices/presentation/providers/selected_device_provider.dart';
 import 'package:pet_tracker/features/devices/presentation/widgets/widgets.dart';
 
 class DevicesScreen extends ConsumerWidget {
@@ -144,6 +145,8 @@ class DevicesScreen extends ConsumerWidget {
           userId: userId,
           onConfirm: () async {
             await ref.read(deviceProvider(userId).notifier).selectDevice(device);
+            // Update in-memory selected device provider so UI reacts immediately
+            await ref.read(selectedDeviceProvider.notifier).setSelected(device.petTrackerDeviceRecordId);
             ref.refresh(deviceProvider(userId));
             Navigator.of(dialogContext).pop();
           },

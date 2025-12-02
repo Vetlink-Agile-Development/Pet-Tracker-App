@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'dart:developer' as developer;
 import 'package:pet_tracker/config/consts/environments.dart';
 import 'package:pet_tracker/features/auth/domain/domain.dart';
 import 'package:pet_tracker/features/auth/infrastructure/infrastructure.dart';
@@ -39,7 +40,7 @@ class AuthDatasourceImpl extends AuthDatasource {
         '/authentication/sign-in',
         data: {'username': username, 'password': password},
       );
-      print(response.data);
+      developer.log(response.data.toString(), name: 'AuthDatasource');
       return UserMapper.userJsonToEntity(response.data);
     } on DioException catch (e) {
       if (e.response?.statusCode == 401) {

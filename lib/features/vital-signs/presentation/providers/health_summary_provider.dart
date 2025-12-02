@@ -1,98 +1,71 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pet_tracker/features/devices/infrastructure/repositories/device_repository_impl.dart';
-import 'package:pet_tracker/features/devices/presentation/providers/device_provider.dart';
 import 'package:pet_tracker/features/vital-signs/domain/entities/health_summary.dart';
-import 'package:pet_tracker/features/vital-signs/domain/repositories/health_summary_repository.dart';
 import 'package:pet_tracker/features/vital-signs/presentation/providers/health_summary_repository_provider.dart';
-import 'package:pet_tracker/shared/infrastructure/services/key_value_storage_provider.dart';
-import 'package:pet_tracker/shared/infrastructure/services/key_value_storage_service.dart';
 
 class HealthSummaryState {
   final bool isLoading;
   final String? errorMessage;
   final List<HealthSummary> summaries;
+  final DateTime selectedMonth;
 
   HealthSummaryState({
     this.isLoading = false,
     this.errorMessage,
     this.summaries = const [],
-  });
+    DateTime? selectedMonth,
+  }) : selectedMonth = selectedMonth ?? DateTime.now();
 
   HealthSummaryState copyWith({
     bool? isLoading,
     String? errorMessage,
     List<HealthSummary>? summaries,
+    DateTime? selectedMonth,
   }) {
     return HealthSummaryState(
       isLoading: isLoading ?? this.isLoading,
-      errorMessage: errorMessage,
+      errorMessage: errorMessage ?? this.errorMessage,
       summaries: summaries ?? this.summaries,
+      selectedMonth: selectedMonth ?? this.selectedMonth,
     );
   }
 }
 
 class HealthSummaryNotifier extends StateNotifier<HealthSummaryState> {
-  final HealthSummaryRepository repository;
-  final KeyValueStorageService storageService;
-  final DeviceRepositoryImpl deviceRepository;
+  final HealthSummaryService service;
 
-  HealthSummaryNotifier(
-      this.repository, this.storageService, this.deviceRepository)
-      : super(HealthSummaryState()) {
+  HealthSummaryNotifier(this.service) : super(HealthSummaryState()) {
     loadSummaries();
   }
 
-  Future<void> loadSummaries() async {
+  Future<void> loadSummaries({DateTime? forMonth}) async {
     state = state.copyWith(isLoading: true);
     try {
-      final userId = await storageService.getValue<String>('userId');
-      var selectedDeviceRecordId =
-          await storageService.getValue<String>('selectedDeviceRecordId');
-
-      if (userId == null) {
-        throw Exception('No user found');
-      }
-
-      final userDevices = await deviceRepository.getAllDevices(userId);
-
-      if (userDevices.isEmpty) {
-        await storageService.removeKey('selectedDeviceRecordId');
-        state = state.copyWith(
-          summaries: [],
-          isLoading: false,
-          errorMessage: 'No devices assigned to this user.',
-        );
-        return;
-      }
-
-      if (selectedDeviceRecordId == null) {
-        selectedDeviceRecordId = userDevices.first.petTrackerDeviceRecordId;
-        await storageService.setKeyValue<String>(
-            'selectedDeviceRecordId', selectedDeviceRecordId);
-      }
-
-      final isOwnedDevice = userDevices.any(
-        (device) => device.petTrackerDeviceRecordId == selectedDeviceRecordId,
-      );
-
-      if (!isOwnedDevice) {
-        throw Exception('Unauthorized access');
-      }
-
-      final data = await repository.fetchHealthSummary(selectedDeviceRecordId);
-      state = state.copyWith(summaries: data, isLoading: false);
+      final data = await service.getSummaries(forMonth: forMonth ?? state.selectedMonth);
+      state = state.copyWith(summaries: data as List<HealthSummary>, isLoading: false, selectedMonth: forMonth ?? state.selectedMonth);
     } catch (e) {
       state = state.copyWith(errorMessage: e.toString(), isLoading: false);
     }
+  }
+
+  Future<void> showPreviousMonth() async {
+    final prev = DateTime(state.selectedMonth.year, state.selectedMonth.month - 1, 1);
+    await loadSummaries(forMonth: prev);
+  }
+
+  Future<void> showNextMonth() async {
+    final next = DateTime(state.selectedMonth.year, state.selectedMonth.month + 1, 1);
+    await loadSummaries(forMonth: next);
+  }
+
+  Future<void> pickMonth(DateTime picked) async {
+    final month = DateTime(picked.year, picked.month, 1);
+    await loadSummaries(forMonth: month);
   }
 }
 
 // Provider
 final healthSummaryProvider =
     StateNotifierProvider<HealthSummaryNotifier, HealthSummaryState>((ref) {
-  final repository = ref.read(healthSummaryRepositoryProvider);
-  final storageService = ref.read(keyValueStorageServiceProvider);
-  final deviceRepository = ref.read(deviceRepositoryProvider);
-
-  return HealthSummaryNotifier(repository, storageService, deviceRepository);
+  final service = ref.read(healthSummaryServiceProvider);
+  return HealthSummaryNotifier(service);
 });

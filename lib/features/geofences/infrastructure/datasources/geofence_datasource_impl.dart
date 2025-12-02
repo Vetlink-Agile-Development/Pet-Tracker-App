@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'dart:developer' as developer;
 import 'package:pet_tracker/config/consts/environments.dart';
 import 'package:pet_tracker/features/geofences/domain/entities/geofence.dart';
 import 'package:pet_tracker/features/geofences/domain/datasources/geofence_datasource.dart';
@@ -22,13 +23,13 @@ class GeofenceDatasourceImpl implements GeofenceDatasource {
     try {
       final token = await storageService.getValue<String>('token');
       if (token == null) {
-        print('>>> Token not found');
+        developer.log('Token not found', name: 'GeofenceDatasource');
         throw Exception('Token not found');
       }
 
       final userId = await storageService.getValue<String>('userId');
       if (userId == null) {
-        print('>>> User ID not found');
+        developer.log('User ID not found', name: 'GeofenceDatasource');
         throw Exception('User ID not found');
       }
 
@@ -53,7 +54,7 @@ class GeofenceDatasourceImpl implements GeofenceDatasource {
 
       return GeofenceMapper.fromJson(response.data);
     } on DioException catch (e) {
-      print('>>> Error creating geofence: ${e.response?.data ?? e.message}');
+      developer.log('Error creating geofence: ${e.response?.data ?? e.message}', name: 'GeofenceDatasource');
       throw Exception('Error creating geofence: ${e.response?.data ?? e.message}');
     }
   }
@@ -63,13 +64,13 @@ class GeofenceDatasourceImpl implements GeofenceDatasource {
     try {
       final token = await storageService.getValue<String>('token');
       if (token == null) {
-        print('>>> Token not found');
+        developer.log('Token not found', name: 'GeofenceDatasource');
         throw Exception('Token not found');
       }
 
       final userId = await storageService.getValue<String>('userId');
       if (userId == null) {
-        print('>>> User ID not found');
+        developer.log('User ID not found', name: 'GeofenceDatasource');
         throw Exception('User ID not found');
       }
 
@@ -83,7 +84,7 @@ class GeofenceDatasourceImpl implements GeofenceDatasource {
           .map((data) => GeofenceMapper.fromJson(data))
           .toList();
     } on DioException catch (e) {
-      print('>>> Error fetching geofences: ${e.response?.data ?? e.message}');
+      developer.log('Error fetching geofences: ${e.response?.data ?? e.message}', name: 'GeofenceDatasource');
       throw Exception('Error fetching geofences: ${e.response?.data ?? e.message}');
     }
   }
@@ -93,13 +94,13 @@ class GeofenceDatasourceImpl implements GeofenceDatasource {
     try {
       final token = await storageService.getValue<String>('token');
       if (token == null) {
-        print('>>> Token not found');
+        developer.log('Token not found', name: 'GeofenceDatasource');
         throw Exception('Token not found');
       }
 
       final userId = await storageService.getValue<String>('userId');
       if (userId == null) {
-        print('>>> User ID not found');
+        developer.log('User ID not found', name: 'GeofenceDatasource');
         throw Exception('User ID not found');
       }
 
@@ -124,7 +125,7 @@ class GeofenceDatasourceImpl implements GeofenceDatasource {
 
       return GeofenceMapper.fromJson(response.data);
     } on DioException catch (e) {
-      print('>>> Error updating geofence: ${e.response?.data ?? e.message}');
+      developer.log('Error updating geofence: ${e.response?.data ?? e.message}', name: 'GeofenceDatasource');
       throw Exception('Error updating geofence: ${e.response?.data ?? e.message}');
     }
   }
@@ -133,8 +134,8 @@ class GeofenceDatasourceImpl implements GeofenceDatasource {
   Future<void> deleteGeofence(int geofenceId) async {
     try {
       final token = await storageService.getValue<String>('token');
-      if (token == null) {
-        print('>>> Token not found');
+        if (token == null) {
+        developer.log('Token not found', name: 'GeofenceDatasource');
         throw Exception('Token not found');
       }
       await dio.delete(

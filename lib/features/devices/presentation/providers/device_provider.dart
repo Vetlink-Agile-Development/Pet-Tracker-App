@@ -3,6 +3,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'dart:developer' as developer;
 import 'package:pet_tracker/features/devices/domain/entities/device.dart';
 import 'package:pet_tracker/features/devices/infrastructure/infrastructure.dart';
 import 'package:pet_tracker/shared/infrastructure/services/key_value_storage_provider.dart';
@@ -31,9 +32,10 @@ class DeviceNotifier extends StateNotifier<AsyncValue<List<Device>>> {
       await storageService.setKeyValue<String>(
           'selectedDeviceRecordId', device.petTrackerDeviceRecordId);
       await storageService.setKeyValue<String>(
-          'selectedApiKey', device.apiKey); print("ApiKey seleccionado: ${device.apiKey}");
+          'selectedApiKey', device.apiKey);
+      developer.log('ApiKey seleccionado: ${device.apiKey}', name: 'DeviceProvider');
     } catch (e) {
-      print("Error al seleccionar el dispositivo: $e");
+      developer.log('Error al seleccionar el dispositivo: $e', name: 'DeviceProvider');
     }
   }
 
@@ -61,7 +63,7 @@ class DeviceNotifier extends StateNotifier<AsyncValue<List<Device>>> {
             .toList();
       });
     } catch (e, stackTrace) {
-      print("Error al actualizar el dispositivo: $e");
+      developer.log('Error al actualizar el dispositivo: $e', name: 'DeviceProvider');
       state = AsyncValue.error(e, stackTrace);
     }
   }
@@ -92,7 +94,7 @@ class DeviceNotifier extends StateNotifier<AsyncValue<List<Device>>> {
         ),
       );
     } catch (e, stackTrace) {
-      print("Error al desvincular el dispositivo: $e");
+      developer.log('Error al desvincular el dispositivo: $e', name: 'DeviceProvider');
       state = AsyncValue.error(e, stackTrace);
       
       ScaffoldMessenger.of(context).showSnackBar(
@@ -118,7 +120,7 @@ class DeviceAssignNotifier extends StateNotifier<AsyncValue<void>> {
       BuildContext context, String deviceRecordId, String userId) async {
     state = const AsyncValue.loading();
 
-    print('>>> Intentando asignar deviceRecordId: $deviceRecordId a userId: $userId');
+    developer.log('Intentando asignar deviceRecordId: $deviceRecordId a userId: $userId', name: 'DeviceAssign');
 
     try {
       final assignedDevice =
@@ -135,13 +137,13 @@ class DeviceAssignNotifier extends StateNotifier<AsyncValue<void>> {
 
       state = const AsyncValue.data(null);
     } on DioException catch (e, stackTrace) {
-      final errorMessage =
+        final errorMessage =
           e.response?.data?['message'] ?? 'Device not found (DioException)';
 
-      print('>>> DioException al asignar: $errorMessage');
-      print('>>> DioResponse: ${e.response}');
+        developer.log('DioException al asignar: $errorMessage', name: 'DeviceAssign');
+        developer.log('DioResponse: ${e.response}', name: 'DeviceAssign');
 
-      state = AsyncValue.error(errorMessage, stackTrace);
+        state = AsyncValue.error(errorMessage, stackTrace);
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -150,7 +152,7 @@ class DeviceAssignNotifier extends StateNotifier<AsyncValue<void>> {
         ),
       );
     } catch (e, stackTrace) {
-      print('>>> Error inesperado al asignar: $e');
+      developer.log('Error inesperado al asignar: $e', name: 'DeviceAssign');
       state = AsyncValue.error(e, stackTrace);
 
       ScaffoldMessenger.of(context).showSnackBar(

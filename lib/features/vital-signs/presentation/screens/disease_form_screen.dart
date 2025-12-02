@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:dio/dio.dart';
-import '../../infrastructure/device_service.dart';
+import '../../infrastructure/disease_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pet_tracker/shared/infrastructure/services/key_value_storage_provider.dart';
-import 'package:pet_tracker/shared/infrastructure/services/key_value_storage_service.dart';
+import 'package:pet_tracker/config/consts/environments.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:path/path.dart' as path_util;
 import '../providers/disease_local_provider.dart';
 
 class DiseaseFormScreen extends StatefulWidget {
   final int petId;
   final String? diseaseId;
   final Map<String, dynamic>? initialData;
-  final int? index; // Nuevo: índice para edición
+  final int? index;
   const DiseaseFormScreen({Key? key, required this.petId, this.diseaseId, this.initialData, this.index}) : super(key: key);
 
   @override
@@ -20,10 +21,6 @@ class DiseaseFormScreen extends StatefulWidget {
 }
 
 class _DiseaseFormScreenState extends State<DiseaseFormScreen> {
-  late KeyValueStorageService _storageService;
-  String? _selectedDeviceNickname;
-  List<String> _deviceNicknames = [];
-  bool _loadingDevices = false;
   File? _diagnosisImage;
   final _formKey = GlobalKey<FormState>();
   late TextEditingController _nameController;
@@ -33,8 +30,6 @@ class _DiseaseFormScreenState extends State<DiseaseFormScreen> {
   late TextEditingController _observationsController;
 
   @override
-  @override
-  @override
   void initState() {
     super.initState();
     _nameController = TextEditingController(text: widget.initialData?['name'] ?? '');
@@ -42,39 +37,7 @@ class _DiseaseFormScreenState extends State<DiseaseFormScreen> {
     _symptomsController = TextEditingController(text: widget.initialData?['symptoms'] ?? '');
     _treatmentController = TextEditingController(text: widget.initialData?['treatment'] ?? '');
     _observationsController = TextEditingController(text: widget.initialData?['observations'] ?? '');
-    // Obtener storageService desde el provider
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      final container = ProviderScope.containerOf(context);
-      _storageService = container.read(keyValueStorageServiceProvider);
-      _fetchDeviceNicknames();
-    });
-  }
-
-  Future<void> _fetchDeviceNicknames() async {
-    setState(() => _loadingDevices = true);
-    try {
-      final userId = await _storageService.getValue<String>('userId');
-      if (userId == null) throw Exception('No user found');
-      final dio = Dio(); // Usa la instancia global/configurada si existe
-      final service = DeviceService(dio);
-      // Si tienes un token, obténlo del storageService
-      final token = await _storageService.getValue<String>('token');
-      final nicknames = await service.getDeviceNicknames(userId, token: token);
-      setState(() {
-        _deviceNicknames = nicknames;
-        _selectedDeviceNickname = _deviceNicknames.isNotEmpty ? _deviceNicknames.first : null;
-        _loadingDevices = false;
-      });
-    } catch (e) {
-      setState(() {
-        _deviceNicknames = [];
-        _selectedDeviceNickname = null;
-        _loadingDevices = false;
-      });
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error al cargar dispositivos: ${e.toString()}')),
-      );
-    }
+    // storage will be read when needed via container.read
   }
 
   @override
@@ -99,54 +62,107 @@ class _DiseaseFormScreenState extends State<DiseaseFormScreen> {
 
   void _submit() async {
     if (_formKey.currentState?.validate() ?? false) {
+      final localId = widget.initialData?['localId'] ?? DateTime.now().millisecondsSinceEpoch.toString();
+
       final newDisease = {
+        'localId': localId,
         'name': _nameController.text,
         'diagnosisDate': _dateController.text,
         'symptoms': _symptomsController.text,
         'treatment': _treatmentController.text,
         'observations': _observationsController.text,
-        'diagnosisImagePath': _diagnosisImage?.path, // Opcional
-        'deviceNickname': _selectedDeviceNickname, // Nuevo campo
+        'diagnosisImagePath': _diagnosisImage?.path,
+        'synced': false,
       };
-      final container = ProviderScope.containerOf(context);
-      if (widget.index != null) {
-        // Edición: actualizar en provider
-        container.read(diseaseLocalProvider.notifier).updateDisease(widget.index!, newDisease);
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('¡Enfermedad actualizada!')),
-        );
-      } else {
-        // Creación: agregar en provider
-        container.read(diseaseLocalProvider.notifier).addDisease(newDisease);
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('¡Enfermedad guardada localmente!')),
-        );
-      }
-      Navigator.of(context).pop(newDisease);
 
-      /*
-      // VERSIÓN API
-      // Descomenta para guardar usando el API
-      try {
-        // import 'package:dio/dio.dart';
-        // import '../../infrastructure/disease_service.dart';
-        final dio = Dio(); // Usa la instancia global/configurada
-        final service = DiseaseService(dio);
-        if (widget.diseaseId == null) {
-          await service.createDisease(widget.petId.toString(), newDisease);
-        } else {
-          await service.updateDisease(widget.petId.toString(), widget.diseaseId!, newDisease);
-        }
+      final container = ProviderScope.containerOf(context);
+      final storage = container.read(keyValueStorageServiceProvider);
+      final deviceId = await storage.getValue<String>('selectedDeviceRecordId');
+      if (!mounted) return;
+      if (deviceId == null) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Disease saved via API!')),
+          const SnackBar(content: Text('No hay dispositivo seleccionado.')),
         );
-        Navigator.of(context).pop();
-      } catch (e) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error: ${e.toString()}')),
-        );
+        return;
       }
-      */
+
+      // Save locally first for immediate UI
+      if (widget.index != null) {
+        container.read(diseaseLocalProvider(deviceId).notifier).updateDisease(widget.index!, newDisease);
+        if (mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('¡Enfermedad actualizada localmente!')));
+      } else {
+        container.read(diseaseLocalProvider(deviceId).notifier).addDisease(newDisease);
+        if (mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('¡Enfermedad guardada localmente!')));
+      }
+
+      // Try to persist to server (DB)
+      try {
+        final token = await storage.getValue<String>('token');
+        final apiKey = await storage.getValue<String>('selectedApiKey');
+        if (!mounted) return;
+        final dio = Dio(BaseOptions(
+          baseUrl: Environment.apiUrl,
+          headers: token != null ? {'Authorization': 'Bearer $token'} : (apiKey != null ? {'x-api-key': apiKey} : null),
+        ));
+        final service = DiseaseService(dio);
+
+        if (widget.diseaseId == null) {
+          // prepare request: use multipart if there's an image
+          // Always send multipart/form-data (server rejects application/json for this endpoint)
+          final formMap = <String, dynamic>{
+            ...newDisease,
+            'petTrackerDeviceRecordId': deviceId,
+            'deviceId': deviceId,
+            'device_id': deviceId,
+          };
+          if (_diagnosisImage != null) {
+            final file = File(_diagnosisImage!.path);
+            final fileName = path_util.basename(file.path);
+            final mf = await MultipartFile.fromFile(file.path, filename: fileName);
+            formMap['diagnosisImage'] = mf;
+          }
+          final requestData = FormData.fromMap(formMap);
+          final serverDisease = await service.createDisease(deviceId, requestData);
+          // find local item by localId and mark synced
+          final list = container.read(diseaseLocalProvider(deviceId));
+          final idx = list.indexWhere((e) => e['localId'] == localId);
+          if (idx != -1) {
+            final updated = {...list[idx], 'id': serverDisease.id, 'synced': true};
+            container.read(diseaseLocalProvider(deviceId).notifier).updateDisease(idx, updated);
+          }
+          if (mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Enfermedad guardada en el servidor.')));
+        } else {
+          // Always send multipart/form-data for update as well
+          final formMapUpd = <String, dynamic>{
+            ...newDisease,
+            'petTrackerDeviceRecordId': deviceId,
+            'deviceId': deviceId,
+            'device_id': deviceId,
+          };
+          if (_diagnosisImage != null) {
+            final file = File(_diagnosisImage!.path);
+            final fileName = path_util.basename(file.path);
+            final mf = await MultipartFile.fromFile(file.path, filename: fileName);
+            formMapUpd['diagnosisImage'] = mf;
+          }
+          final requestDataUpd = FormData.fromMap(formMapUpd);
+          final serverDisease = await service.updateDisease(deviceId, widget.diseaseId!, requestDataUpd);
+          final list = container.read(diseaseLocalProvider(deviceId));
+          final idx = widget.index ?? list.indexWhere((e) => e['localId'] == localId);
+          if (idx != -1) {
+            final updated = {...list[idx], 'id': serverDisease.id, 'synced': true};
+            container.read(diseaseLocalProvider(deviceId).notifier).updateDisease(idx, updated);
+          }
+          if (mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Enfermedad actualizada en el servidor.')));
+        }
+        } catch (e) {
+          // On error: keep user UX clean; data already saved locally
+          if (mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('No se pudo sincronizar con el servidor. Se guardó localmente.')));
+        }
+
+      if (mounted) Navigator.of(context).pop(newDisease);
+
+      // Removed old commented-out API snippet; network logic above is used instead.
     }
   }
 
@@ -160,24 +176,7 @@ class _DiseaseFormScreenState extends State<DiseaseFormScreen> {
           key: _formKey,
           child: ListView(
             children: [
-              _loadingDevices
-                  ? const Center(child: CircularProgressIndicator())
-                  : DropdownButtonFormField<String>(
-                      value: _selectedDeviceNickname,
-                      decoration: const InputDecoration(labelText: 'Dispositivo de Mascota'),
-                      items: _deviceNicknames
-                          .map((nickname) => DropdownMenuItem(
-                                value: nickname,
-                                child: Text(nickname),
-                              ))
-                          .toList(),
-                      onChanged: (value) {
-                        setState(() {
-                          _selectedDeviceNickname = value;
-                        });
-                      },
-                      validator: (value) => value == null || value.isEmpty ? 'Requerido' : null,
-                    ),
+              // Device selection is global; do not allow choosing device here.
               const SizedBox(height: 16),
               TextFormField(
                 controller: _nameController,

@@ -8,8 +8,9 @@ class HealthSummaryRepositoryImpl implements HealthSummaryRepository {
   HealthSummaryRepositoryImpl({required this.remoteDataSource});
 
   @override
-  Future<List<HealthSummary>> fetchHealthSummary(String deviceRecordId) async {
-    return await remoteDataSource.fetchHealthSummary(deviceRecordId);
+  @override
+  Future<List<HealthSummary>> fetchHealthSummary(String deviceRecordId, {DateTime? month}) async {
+    return await remoteDataSource.fetchHealthSummary(deviceRecordId, month: month);
   }
 
   @override

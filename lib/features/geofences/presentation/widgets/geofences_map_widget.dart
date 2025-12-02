@@ -10,7 +10,7 @@ class GeofenceMapWidget extends ConsumerWidget {
   final Geofence? geofence;
   final bool isEditable;
 
-  static const LatLng defaultLocation = LatLng(-12.0464, -77.0428);
+  static const LatLng defaultLocation = LatLng(-12.07643, -77.09355);
 
   const GeofenceMapWidget({
     super.key,
