@@ -7,6 +7,8 @@ class RegisterFormState {
   final bool isPosting;
   final bool isFormPosted;
   final bool isValid;
+  final bool acceptedTerms;
+  final bool registrationSuccess;
   final Username username;
   final Email email;
   final Name firstName;
@@ -18,6 +20,8 @@ class RegisterFormState {
     this.isPosting = false,
     this.isFormPosted = false,
     this.isValid = false,
+    this.acceptedTerms = false,
+    this.registrationSuccess = false,
     this.username = const Username.pure(),
     this.email = const Email.pure(),
     this.firstName = const Name.pure(),
@@ -30,6 +34,8 @@ class RegisterFormState {
     bool? isPosting,
     bool? isFormPosted,
     bool? isValid,
+    bool? acceptedTerms,
+    bool? registrationSuccess,
     Username? username,
     Email? email,
     Name? firstName,
@@ -41,6 +47,8 @@ class RegisterFormState {
       isPosting: isPosting ?? this.isPosting,
       isFormPosted: isFormPosted ?? this.isFormPosted,
       isValid: isValid ?? this.isValid,
+      acceptedTerms: acceptedTerms ?? this.acceptedTerms,
+      registrationSuccess: registrationSuccess ?? this.registrationSuccess,
       username: username ?? this.username,
       email: email ?? this.email,
       firstName: firstName ?? this.firstName,
@@ -52,7 +60,7 @@ class RegisterFormState {
 }
 
 class RegisterFormNotifier extends StateNotifier<RegisterFormState> {
-  final Function(
+  final Future<bool> Function(
     String username,
     String password,
     List<String> roles,
@@ -111,14 +119,22 @@ class RegisterFormNotifier extends StateNotifier<RegisterFormState> {
     );
   }
 
+  void onAcceptedTermsChanged(bool value) {
+    state = state.copyWith(
+      acceptedTerms: value,
+      isValid: _validateForm(state.username, state.email, state.firstName, state.lastName, state.password, state.confirmPassword),
+    );
+  }
+
   Future<void> onFormSubmit() async {
     _touchAllFields();
     if (!state.isValid) return;
     if (state.password.value != state.confirmPassword.value) return;
+    if (!state.acceptedTerms) return;
 
-    state = state.copyWith(isPosting: true);
+    state = state.copyWith(isPosting: true, registrationSuccess: false);
 
-    await registerUserCallback(
+    final success = await registerUserCallback(
       state.username.value,
       state.password.value,
       ['ROLE_USER'],
@@ -128,7 +144,7 @@ class RegisterFormNotifier extends StateNotifier<RegisterFormState> {
     );
 
     if (mounted) {
-      state = state.copyWith(isPosting: false);
+      state = state.copyWith(isPosting: false, registrationSuccess: success);
     }
   }
 
@@ -160,7 +176,9 @@ class RegisterFormNotifier extends StateNotifier<RegisterFormState> {
     Password password,
     Password confirmPassword,
   ) {
-    return Formz.validate([username, email, firstName, lastName, password, confirmPassword]);
+    final formValid = Formz.validate([username, email, firstName, lastName, password, confirmPassword]);
+    final passwordsMatch = password.value == confirmPassword.value;
+    return formValid && passwordsMatch && state.acceptedTerms;
   }
 }
 

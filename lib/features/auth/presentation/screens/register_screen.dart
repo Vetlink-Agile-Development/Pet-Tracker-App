@@ -108,7 +108,44 @@ class RegisterScreen extends ConsumerWidget {
                         onChanged: registerNotifier.onConfirmPasswordChanged,
                         errorMessage: registerForm.isFormPosted ? registerForm.confirmPassword.errorMessage : null,
                       ),
-                      const SizedBox(height: 30),
+                      const SizedBox(height: 20),
+                      Row(
+                        children: [
+                          Checkbox(
+                            value: registerForm.acceptedTerms,
+                            onChanged: (value) {
+                              registerNotifier.onAcceptedTermsChanged(value ?? false);
+                            },
+                            activeColor: const Color(0xFF08273A),
+                          ),
+                          Expanded(
+                            child: GestureDetector(
+                              onTap: () {
+                                registerNotifier.onAcceptedTermsChanged(!registerForm.acceptedTerms);
+                              },
+                              child: const Text(
+                                'Acepto los términos y condiciones y las políticas de privacidad de PetTracker',
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.black87,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      if (registerForm.isFormPosted && !registerForm.acceptedTerms)
+                        const Padding(
+                          padding: EdgeInsets.only(left: 12, top: 4),
+                          child: Text(
+                            'Debes aceptar los términos y condiciones para continuar',
+                            style: TextStyle(
+                              fontSize: 11,
+                              color: Colors.red,
+                            ),
+                          ),
+                        ),
+                      const SizedBox(height: 20),
                       SizedBox(
                         width: double.infinity,
                         child: CustomFilledButton(
@@ -117,8 +154,17 @@ class RegisterScreen extends ConsumerWidget {
                           onPressed: registerForm.isPosting
                               ? null
                               : () async {
+                                  if (!registerForm.acceptedTerms) {
+                                    showSnackBar(context, 'Debes aceptar los términos y condiciones');
+                                    return;
+                                  }
+                                  if (registerForm.password.value != registerForm.confirmPassword.value) {
+                                    showSnackBar(context, 'Las contraseñas no coinciden');
+                                    return;
+                                  }
                                   await registerNotifier.onFormSubmit();
-                                  if (registerForm.isValid) {
+                                  final updatedForm = ref.read(registerFormProvider);
+                                  if (updatedForm.registrationSuccess) {
                                     if (context.mounted) {
                                       showSnackBar(context, 'Usuario registrado exitosamente');
                                       context.go('/login');

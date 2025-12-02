@@ -74,9 +74,11 @@ class AuthDatasourceImpl extends AuthDatasource {
           'roles': roles,
         },
       );
+      print("Status code: ${response.statusCode}");
       return UserMapper.userJsonToEntity(response.data);
     } catch (e) {
-      throw Exception('Registration failed');
+      print("Registration error: $e");
+      throw Exception('Error en el registro de usuario: ${e.toString()}');
     }
   }
 

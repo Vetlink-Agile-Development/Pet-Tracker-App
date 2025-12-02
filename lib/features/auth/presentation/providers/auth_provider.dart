@@ -53,11 +53,11 @@ class AuthNotifier extends StateNotifier<AuthState> {
           await authRepository.fetchUserProfile(authenticatedUser.id);
       state = state.copyWith(userProfile: userProfile);
     } catch (e) {
-      logout('Login failed');
+      logout('Error inicio de sesión: Credenciales inválidas');
     }
   }
 
-  Future<void> registerUser(
+  Future<bool> registerUser(
     String username,
     String password,
     List<String> roles,
@@ -74,12 +74,12 @@ class AuthNotifier extends StateNotifier<AuthState> {
         firstName,
         lastName,
       );
-      await _setLoggedUser(authenticatedUser);
-      final userProfile =
-          await authRepository.fetchUserProfile(authenticatedUser.id);
-      state = state.copyWith(userProfile: userProfile);
+      //Usa emojis para depurar
+      print("Authenticated User 🐾: ${authenticatedUser.id}");
+      return true;
     } catch (e) {
-      logout('Registration failed');
+      logout('Error en el registro: Credenciales inválidas');
+      return false;
     }
   }
 
@@ -94,7 +94,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
           await authRepository.fetchUserProfile(authenticatedUser.id);
       state = state.copyWith(userProfile: userProfile);
     } catch (e) {
-      logout('Session expired');
+      logout('Sesión expirada');
     }
   }
 
