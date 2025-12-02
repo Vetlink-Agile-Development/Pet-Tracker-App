@@ -14,12 +14,10 @@ class SettingsScreen extends ConsumerStatefulWidget {
 }
 
 class SettingsScreenState extends ConsumerState<SettingsScreen> {
-  bool _obscurePassword = true;
   bool _obscureNewPassword = true;
   bool _obscureConfirmPassword = true;
 
   final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _newPasswordController = TextEditingController();
   final TextEditingController _confirmPasswordController =
       TextEditingController();
@@ -46,41 +44,98 @@ class SettingsScreenState extends ConsumerState<SettingsScreen> {
   }
 
   void _validateAndSave() {
-    final newPassword = Password.dirty(_newPasswordController.text);
-    final confirmPassword = _confirmPasswordController.text;
+    final email = Email.dirty(_emailController.text);
+    final name = Name.dirty(_nameController.text);
+    final surname = Name.dirty(_surnameController.text);
+    
+    // Validar email
+    if (email.error == EmailError.empty) {
+      _showSnackBar(context, 'El correo electrónico es requerido');
+      return;
+    }
+    if (email.error == EmailError.format) {
+      _showSnackBar(context, 'El formato del correo es inválido');
+      return;
+    }
+    
+    // Validar nombre
+    if (name.error == NameError.empty) {
+      _showSnackBar(context, 'El nombre es requerido');
+      return;
+    }
+    if (name.error == NameError.tooShort) {
+      _showSnackBar(context, 'El nombre debe tener al menos 2 caracteres');
+      return;
+    }
+    
+    // Validar apellido
+    if (surname.error == NameError.empty) {
+      _showSnackBar(context, 'El apellido es requerido');
+      return;
+    }
+    if (surname.error == NameError.tooShort) {
+      _showSnackBar(context, 'El apellido debe tener al menos 2 caracteres');
+      return;
+    }
 
-    if (newPassword.error == PasswordError.empty) {
-      _showSnackBar(context, 'Nueva Contraseña es requerida');
-      return;
-    }
-    if (newPassword.error == PasswordError.length) {
-      _showSnackBar(context, 'Nueva Contraseña debe tener al menos 6 caracteres');
-      return;
-    }
-    if (newPassword.error == PasswordError.format) {
-      _showSnackBar(context,
-          'Nueva Contraseña debe contener mayúscula, minúscula y un número');
-      return;
+    // Validar contraseña solo si se ingresó una nueva
+    String? newPassword;
+    if (_newPasswordController.text.isNotEmpty) {
+      final password = Password.dirty(_newPasswordController.text);
+      final confirmPassword = _confirmPasswordController.text;
+
+      if (password.error == PasswordError.length) {
+        _showSnackBar(context, 'La contraseña debe tener al menos 6 caracteres');
+        return;
+      }
+      if (password.error == PasswordError.format) {
+        _showSnackBar(context,
+            'La contraseña debe contener mayúscula, minúscula y un número');
+        return;
+      }
+
+      if (password.value != confirmPassword) {
+        _showSnackBar(context, 'Las contraseñas no coinciden');
+        return;
+      }
+      
+      newPassword = password.value;
     }
 
-    if (newPassword.value != confirmPassword) {
-      _showSnackBar(context, 'Nueva Contraseña y Confirmar Contraseña no coinciden');
-      return;
-    }
-
-    _showSaveChangesModal(context);
+    _showSaveChangesModal(context, newPassword);
   }
 
-  void _showSaveChangesModal(BuildContext context) {
+  void _showSaveChangesModal(BuildContext context, String? newPassword) {
     showDialog(
       context: context,
       builder: (_) => SaveChangesModal(
         onCancel: () {
           _resetFields();
         },
-        onSave: () {
-          // TODO: Implementar el onSave cuando el Backend esté listo
-          context.pop();
+        onSave: () async {
+          try {
+            final authState = ref.read(authProvider);
+            final userId = authState.userProfile!.id;
+            
+            await ref.read(authProvider.notifier).updateUserProfile(
+              userId: userId,
+              email: _emailController.text,
+              firstName: _nameController.text,
+              lastName: _surnameController.text,
+              newPassword: newPassword,
+            );
+            
+            if (mounted) {
+              context.pop();
+              _showSnackBar(context, 'Perfil actualizado exitosamente');
+              _resetPasswordFields();
+            }
+          } catch (e) {
+            if (mounted) {
+              context.pop();
+              _showSnackBar(context, 'Error al actualizar el perfil: $e');
+            }
+          }
         },
       ),
     );
@@ -92,12 +147,15 @@ class SettingsScreenState extends ConsumerState<SettingsScreen> {
 
     if (userProfile != null) {
       _emailController.text = userProfile.email;
-      _passwordController.clear();
-      _newPasswordController.clear();
-      _confirmPasswordController.clear();
       _nameController.text = userProfile.firstName;
       _surnameController.text = userProfile.lastName;
     }
+    _resetPasswordFields();
+  }
+  
+  void _resetPasswordFields() {
+    _newPasswordController.clear();
+    _confirmPasswordController.clear();
   }
 
   @override
@@ -142,26 +200,26 @@ class SettingsScreenState extends ConsumerState<SettingsScreen> {
                         ),
                       ),
                     ),
-                    Positioned(
-                      bottom: 0,
-                      right: 0,
-                      child: InkWell(
-                        onTap: () {
-                          // Implementar selección de imagen
-                        },
-                        child: Container(
-                          padding: const EdgeInsets.all(6),
-                          decoration: BoxDecoration(
-                            color: Colors.black54,
-                            borderRadius: BorderRadius.circular(50),
-                          ),
-                          child: const Text(
-                            'SELECCIONAR IMAGEN',
-                            style: TextStyle(color: Colors.white, fontSize: 12),
-                          ),
-                        ),
-                      ),
-                    ),
+                    // Positioned(
+                    //   bottom: 0,
+                    //   right: 0,
+                    //   child: InkWell(
+                    //     onTap: () {
+                    //       // Implementar selección de imagen
+                    //     },
+                    //     child: Container(
+                    //       padding: const EdgeInsets.all(6),
+                    //       decoration: BoxDecoration(
+                    //         color: Colors.black54,
+                    //         borderRadius: BorderRadius.circular(50),
+                    //       ),
+                    //       child: const Text(
+                    //         'SELECCIONAR IMAGEN',
+                    //         style: TextStyle(color: Colors.white, fontSize: 12),
+                    //       ),
+                    //     ),
+                    //   ),
+                    // ),
                   ],
                 ),
                 const SizedBox(height: 16),
@@ -172,39 +230,6 @@ class SettingsScreenState extends ConsumerState<SettingsScreen> {
                   icon: Icons.email,
                   isObscure: false,
                   isEnabled: true,
-                ),
-                const SizedBox(height: 10),
-                _buildPasswordField(
-                  label: 'Contraseña',
-                  controller: _passwordController,
-                  isObscure: _obscurePassword,
-                  onToggleVisibility: () {
-                    setState(() {
-                      _obscurePassword = !_obscurePassword;
-                    });
-                  },
-                ),
-                const SizedBox(height: 10),
-                _buildPasswordField(
-                  label: 'Nueva Contraseña',
-                  controller: _newPasswordController,
-                  isObscure: _obscureNewPassword,
-                  onToggleVisibility: () {
-                    setState(() {
-                      _obscureNewPassword = !_obscureNewPassword;
-                    });
-                  },
-                ),
-                const SizedBox(height: 10),
-                _buildPasswordField(
-                  label: 'Confirmar Contraseña',
-                  controller: _confirmPasswordController,
-                  isObscure: _obscureConfirmPassword,
-                  onToggleVisibility: () {
-                    setState(() {
-                      _obscureConfirmPassword = !_obscureConfirmPassword;
-                    });
-                  },
                 ),
                 const SizedBox(height: 10),
                 _buildTextField(
@@ -219,6 +244,40 @@ class SettingsScreenState extends ConsumerState<SettingsScreen> {
                   controller: _surnameController,
                   icon: Icons.person_outline,
                   isObscure: false,
+                ),
+                const SizedBox(height: 20),
+                
+                // Sección de cambio de contraseña (opcional)
+                const Divider(),
+                const Text(
+                  'Cambiar Contraseña (Opcional)',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF08273A),
+                  ),
+                ),
+                const SizedBox(height: 10),
+                _buildPasswordField(
+                  label: 'Nueva Contraseña',
+                  controller: _newPasswordController,
+                  isObscure: _obscureNewPassword,
+                  onToggleVisibility: () {
+                    setState(() {
+                      _obscureNewPassword = !_obscureNewPassword;
+                    });
+                  },
+                ),
+                const SizedBox(height: 10),
+                _buildPasswordField(
+                  label: 'Confirmar Nueva Contraseña',
+                  controller: _confirmPasswordController,
+                  isObscure: _obscureConfirmPassword,
+                  onToggleVisibility: () {
+                    setState(() {
+                      _obscureConfirmPassword = !_obscureConfirmPassword;
+                    });
+                  },
                 ),
                 const SizedBox(height: 20),
 
@@ -293,7 +352,6 @@ class SettingsScreenState extends ConsumerState<SettingsScreen> {
   @override
   void dispose() {
     _emailController.dispose();
-    _passwordController.dispose();
     _newPasswordController.dispose();
     _confirmPasswordController.dispose();
     _nameController.dispose();

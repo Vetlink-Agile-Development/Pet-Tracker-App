@@ -109,6 +109,35 @@ class AuthNotifier extends StateNotifier<AuthState> {
     );
   }
 
+  Future<void> updateUserProfile({
+    required int userId,
+    required String email,
+    required String firstName,
+    required String lastName,
+    String? newPassword,
+  }) async {
+    try {
+      // Si no hay nueva contraseña, usar la actual (o un valor vacío según tu backend)
+      final password = newPassword ?? '';
+      
+      // Mantener el rol actual del usuario
+      const currentRoles = 'ROLE_USER';
+      
+      final updatedProfile = await authRepository.updateUserProfile(
+        userId,
+        email,
+        firstName,
+        lastName,
+        password,
+        currentRoles,
+      );
+      
+      state = state.copyWith(userProfile: updatedProfile);
+    } catch (e) {
+      throw Exception('Error al actualizar el perfil: $e');
+    }
+  }
+
   Future<void> logout([String? errorMessage]) async {
     await keyValueStorageService.removeKey('token');
     await keyValueStorageService.removeKey('userId');

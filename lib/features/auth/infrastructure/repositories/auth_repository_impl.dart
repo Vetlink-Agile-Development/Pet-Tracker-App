@@ -31,4 +31,9 @@ class AuthRepositoryImpl extends AuthRepository {
   Future<UserProfile> fetchUserProfile(int userId) {
     return datasource.fetchUserProfile(userId);
   }
+  
+  @override
+  Future<UserProfile> updateUserProfile(int userId, String email, String firstName, String lastName, String password, String roles) {
+    return datasource.updateUserProfile(userId, email, firstName, lastName, password, roles);
+  }
 }

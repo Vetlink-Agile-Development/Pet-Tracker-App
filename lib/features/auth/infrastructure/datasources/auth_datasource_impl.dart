@@ -96,4 +96,28 @@ class AuthDatasourceImpl extends AuthDatasource {
       throw Exception('Failed to load user profile');
     }
   }
+  
+  @override
+  Future<UserProfile> updateUserProfile(int userId, String email, String firstName, String lastName, String password, String roles) async {
+    try {
+      final token = await storageService.getValue<String>('token');
+      if (token == null) throw Exception('Token not found');
+
+      final response = await dio.put(
+        '/users/$userId',
+        data: {
+          'email': email,
+          'firstName': firstName,
+          'lastName': lastName,
+          'password': password,
+          'roles': [roles],
+        },
+        options: Options(headers: {'Authorization': 'Bearer $token'}),
+      );
+
+      return UserProfileMapper.fromJson(response.data);
+    } catch (e) {
+      throw Exception('Failed to update user profile');
+    }
+  }
 }

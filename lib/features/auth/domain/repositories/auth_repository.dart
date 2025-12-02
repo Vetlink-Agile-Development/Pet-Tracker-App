@@ -6,4 +6,5 @@ abstract class AuthRepository {
   Future<AuthenticatedUser> register(String username, String password, List<String> roles, String email, String firstName, String lastName);
   Future<AuthenticatedUser> checkAuthStatus(String token);
   Future<UserProfile> fetchUserProfile(int userId);
+  Future<UserProfile> updateUserProfile(int userId, String email, String firstName, String lastName, String password, String roles);
 }
