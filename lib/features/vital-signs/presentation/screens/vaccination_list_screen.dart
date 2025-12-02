@@ -26,7 +26,7 @@ class _VaccinationListScreenState extends ConsumerState<VaccinationListScreen> {
     return Scaffold(
         appBar: AppBar(title: const Text('Vacunas')),
       body: vaccinations.isEmpty
-          ? const Center(child: Text('No vaccinations found.'))
+          ? const Center(child: Text('No se encontraron vacunas.'))
           : ListView.separated(
               padding: const EdgeInsets.all(16),
               itemCount: vaccinations.length,

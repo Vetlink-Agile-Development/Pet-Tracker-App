@@ -217,8 +217,29 @@ class _ActivityPageState extends ConsumerState<_ActivityPage> {
                           : const SizedBox.shrink();
                     }
                     final a = activities[index];
+                    
+                    // Traducir nombres de actividad
+                    String translatedActivityName = a.activityName;
+                    switch (a.activityName) {
+                      case 'High Heart Rate':
+                        translatedActivityName = 'Frecuencia cardíaca alta';
+                        break;
+                      case 'Low Heart Rate':
+                        translatedActivityName = 'Frecuencia cardíaca baja';
+                        break;
+                      case 'High Spo2':
+                        translatedActivityName = 'Saturación de oxígeno alta';
+                        break;
+                      case 'Low Spo2':
+                        translatedActivityName = 'Saturación de oxígeno baja';
+                        break;
+                      case 'Geofence Exit':
+                        translatedActivityName = 'Salida de la geocerca';
+                        break;
+                    }
+                    
                     return ListTile(
-                      title: Text(a.activityName),
+                      title: Text(translatedActivityName),
                       subtitle: Text('${a.activityType} • ${DateFormat('yyyy-MM-dd HH:mm').format(a.dateAndTime)}'),
                     );
                   },

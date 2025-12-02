@@ -123,27 +123,33 @@ class HomeScreen extends ConsumerWidget {
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: currentLocationState.when(
-                        data: (currentLocation) => Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(
-                              'Nivel de Riesgo: ${currentLocation.riskLevel}',
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                                color: currentLocation.riskLevel == 'DANGER'
-                                    ? Colors.red
-                                    : Colors.green,
+                        data: (currentLocation) {
+                          final riskLevelText = currentLocation.riskLevel == 'DANGER' 
+                              ? 'PELIGRO' 
+                              : 'SEGURO';
+                          
+                          return Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                'Nivel de Riesgo: $riskLevelText',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  color: currentLocation.riskLevel == 'DANGER'
+                                      ? Colors.red
+                                      : Colors.green,
+                                ),
                               ),
-                            ),
-                            const SizedBox(height: 8),
-                            Text(
-                              'Latitud: ${currentLocation.latitude.toStringAsFixed(4)}, '
-                              'Longitud: ${currentLocation.longitude.toStringAsFixed(4)}',
-                              style: const TextStyle(fontSize: 14),
-                            ),
-                          ],
-                        ),
+                              const SizedBox(height: 8),
+                              Text(
+                                'Latitud: ${currentLocation.latitude.toStringAsFixed(4)}, '
+                                'Longitud: ${currentLocation.longitude.toStringAsFixed(4)}',
+                                style: const TextStyle(fontSize: 14),
+                              ),
+                            ],
+                          );
+                        },
                         loading: () =>
                             const Text('Cargando ubicación actual...'),
                         error: (error, stackTrace) {

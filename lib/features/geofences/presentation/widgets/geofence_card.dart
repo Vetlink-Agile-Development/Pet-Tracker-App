@@ -116,7 +116,7 @@ class GeofenceCard extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  'Status: ${geofence.geoFenceStatus}',
+                  'Estado: ${geofence.geoFenceStatus == 'ACTIVE' ? 'ACTIVO' : 'INACTIVO'}',
                   style: const TextStyle(fontSize: 14, color: Colors.grey),
                 ),
               ],
