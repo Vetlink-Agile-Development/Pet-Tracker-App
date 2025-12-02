@@ -1,7 +1,6 @@
 // prediction_result_screen.dart
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
-import 'package:intl/intl.dart';
 import 'package:pet_tracker/features/vital-signs/domain/entities/health_summary.dart';
 
 class PredictionResultScreen extends StatelessWidget {

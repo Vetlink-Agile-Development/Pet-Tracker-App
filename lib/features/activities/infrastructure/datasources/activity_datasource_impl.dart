@@ -15,14 +15,45 @@ class ActivityDatasourceImpl extends ActivityDatasource {
   }) : dio = dio ?? Dio(BaseOptions(baseUrl: Environment.apiUrl));
 
   @override
-  Future<List<Activity>> getActivities(String deviceRecordId) async {
+  Future<List<Activity>> getActivities(
+    String deviceRecordId, {
+    String? activityType,
+    DateTime? from,
+    DateTime? to,
+    int page = 1,
+    int pageSize = 20,
+  }) async {
     final token = await storageService.getValue<String>('token');
-    if (token == null) throw Exception('Token not found');
+    final selectedApiKey = await storageService.getValue<String>('selectedApiKey');
+
+    final query = <String, dynamic>{
+      'page': page,
+      'pageSize': pageSize,
+    };
+    // Prefer snake_case query parameter matching DB/endpoint naming
+    if (activityType != null) {
+      query['activity_type'] = activityType;
+    }
+    if (from != null) query['from'] = from.toIso8601String();
+    if (to != null) query['to'] = to.toIso8601String();
+
+    // Authorization: prefer Bearer token, fallback to x-api-key if provided
+    final headers = <String, String>{};
+    if (token != null) {
+      headers['Authorization'] = 'Bearer $token';
+    } else if (selectedApiKey != null) {
+      headers['x-api-key'] = selectedApiKey;
+    }
+
+    // (debug prints removed)
 
     final response = await dio.get(
       '/devices/$deviceRecordId/activities',
-      options: Options(headers: {'Authorization': 'Bearer $token'}),
+      queryParameters: query,
+      options: Options(headers: headers),
     );
+
+    // (debug prints removed)
 
     return (response.data as List)
         .map((json) => ActivityMapper.fromJson(json))

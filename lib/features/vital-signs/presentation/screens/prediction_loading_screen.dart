@@ -1,5 +1,6 @@
 // prediction_loading_screen.dart
 import 'package:flutter/material.dart';
+import 'dart:developer' as developer;
 import 'package:pet_tracker/features/devices/infrastructure/repositories/device_repository_impl.dart';
 import 'package:pet_tracker/features/vital-signs/domain/repositories/health_summary_repository.dart';
 import 'package:pet_tracker/features/vital-signs/presentation/screens/prediction_result_screen.dart';
@@ -101,8 +102,8 @@ class _PredictionLoadingScreenState extends State<PredictionLoadingScreen>
         ),
       );
     } catch (e, stacktrace) {
-      print('>>> Prediction error: $e');
-      print(stacktrace);
+      developer.log('Prediction error: $e', name: 'PredictionLoading');
+      developer.log('$stacktrace', name: 'PredictionLoading');
     }
   }
 

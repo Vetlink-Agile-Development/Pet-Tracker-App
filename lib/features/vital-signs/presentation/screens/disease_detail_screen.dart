@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/disease_local_provider.dart';
+import 'package:pet_tracker/shared/infrastructure/services/key_value_storage_provider.dart';
 import 'disease_form_screen.dart';
 
 class DiseaseDetailScreen extends ConsumerWidget {
@@ -35,21 +36,26 @@ class DiseaseDetailScreen extends ConsumerWidget {
                       MaterialPageRoute(
                         builder: (_) => DiseaseFormScreen(
                           petId: petId,
-                          diseaseId: null,
+                          diseaseId: disease['id']?.toString(),
                           initialData: disease,
                           index: index,
                         ),
                       ),
                     );
                     if (updated != null) {
-                      ref.read(diseaseLocalProvider.notifier).updateDisease(index, updated);
+                      // Obtener deviceId y actualizar el provider específico
+                      final storage = ref.read(keyValueStorageServiceProvider);
+                      final deviceId = await storage.getValue<String>('selectedDeviceRecordId');
+                      if (deviceId != null) {
+                        ref.read(diseaseLocalProvider(deviceId).notifier).updateDisease(index, updated);
+                      }
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Disease updated!')),
+                        const SnackBar(content: Text('Enfermedad actualizada!')),
                       );
                       Navigator.of(context).pop();
                     }
                   },
-                  child: const Text('Edit'),
+                  child: const Text('Editar'),
                 ),
                 const SizedBox(width: 16),
                 ElevatedButton(
@@ -58,29 +64,33 @@ class DiseaseDetailScreen extends ConsumerWidget {
                     final confirm = await showDialog<bool>(
                       context: context,
                       builder: (ctx) => AlertDialog(
-                        title: const Text('Delete Disease'),
-                        content: const Text('Are you sure you want to delete this disease?'),
+                        title: const Text('Eliminar enfermedad'),
+                        content: const Text('¿Está seguro de que desea eliminar esta enfermedad?'),
                         actions: [
                           TextButton(
                             onPressed: () => Navigator.of(ctx).pop(false),
-                            child: const Text('Cancel'),
+                            child: const Text('Cancelar'),
                           ),
                           TextButton(
                             onPressed: () => Navigator.of(ctx).pop(true),
-                            child: const Text('Delete'),
+                            child: const Text('Eliminar'),
                           ),
                         ],
                       ),
                     );
                     if (confirm == true) {
-                      ref.read(diseaseLocalProvider.notifier).deleteDisease(index);
+                      final storage = ref.read(keyValueStorageServiceProvider);
+                      final deviceId = await storage.getValue<String>('selectedDeviceRecordId');
+                      if (deviceId != null) {
+                        ref.read(diseaseLocalProvider(deviceId).notifier).deleteDisease(index);
+                      }
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Disease deleted!')),
+                        const SnackBar(content: Text('Enfermedad eliminada!')),
                       );
                       Navigator.of(context).pop();
                     }
                   },
-                  child: const Text('Delete'),
+                  child: const Text('Eliminar'),
                 ),
               ],
             )
