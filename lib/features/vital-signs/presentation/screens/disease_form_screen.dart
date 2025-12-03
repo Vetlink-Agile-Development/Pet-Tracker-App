@@ -89,10 +89,10 @@ class _DiseaseFormScreenState extends State<DiseaseFormScreen> {
       // Save locally first for immediate UI
       if (widget.index != null) {
         container.read(diseaseLocalProvider(deviceId).notifier).updateDisease(widget.index!, newDisease);
-        if (mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('¡Enfermedad actualizada localmente!')));
+        if (mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('¡Enfermedad actualizada!')));
       } else {
         container.read(diseaseLocalProvider(deviceId).notifier).addDisease(newDisease);
-        if (mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('¡Enfermedad guardada localmente!')));
+        if (mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('¡Enfermedad guardada!')));
       }
 
       // Try to persist to server (DB)
@@ -107,22 +107,24 @@ class _DiseaseFormScreenState extends State<DiseaseFormScreen> {
         final service = DiseaseService(dio);
 
         if (widget.diseaseId == null) {
-          // prepare request: use multipart if there's an image
-          // Always send multipart/form-data (server rejects application/json for this endpoint)
-          final formMap = <String, dynamic>{
-            ...newDisease,
-            'petTrackerDeviceRecordId': deviceId,
-            'deviceId': deviceId,
-            'device_id': deviceId,
-          };
+          // Create new disease
+          MultipartFile? imageFile;
           if (_diagnosisImage != null) {
             final file = File(_diagnosisImage!.path);
             final fileName = path_util.basename(file.path);
-            final mf = await MultipartFile.fromFile(file.path, filename: fileName);
-            formMap['diagnosisImage'] = mf;
+            imageFile = await MultipartFile.fromFile(file.path, filename: fileName);
           }
-          final requestData = FormData.fromMap(formMap);
-          final serverDisease = await service.createDisease(deviceId, requestData);
+          
+          final serverDisease = await service.createDisease(
+            deviceId,
+            name: _nameController.text,
+            diagnosisDate: _dateController.text,
+            symptoms: _symptomsController.text,
+            treatment: _treatmentController.text,
+            observations: _observationsController.text.isNotEmpty ? _observationsController.text : null,
+            image: imageFile,
+          );
+          
           // find local item by localId and mark synced
           final list = container.read(diseaseLocalProvider(deviceId));
           final idx = list.indexWhere((e) => e['localId'] == localId);
@@ -132,21 +134,25 @@ class _DiseaseFormScreenState extends State<DiseaseFormScreen> {
           }
           if (mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Enfermedad guardada en el servidor.')));
         } else {
-          // Always send multipart/form-data for update as well
-          final formMapUpd = <String, dynamic>{
-            ...newDisease,
-            'petTrackerDeviceRecordId': deviceId,
-            'deviceId': deviceId,
-            'device_id': deviceId,
-          };
+          // Update existing disease
+          MultipartFile? imageFile;
           if (_diagnosisImage != null) {
             final file = File(_diagnosisImage!.path);
             final fileName = path_util.basename(file.path);
-            final mf = await MultipartFile.fromFile(file.path, filename: fileName);
-            formMapUpd['diagnosisImage'] = mf;
+            imageFile = await MultipartFile.fromFile(file.path, filename: fileName);
           }
-          final requestDataUpd = FormData.fromMap(formMapUpd);
-          final serverDisease = await service.updateDisease(deviceId, widget.diseaseId!, requestDataUpd);
+          
+          final serverDisease = await service.updateDisease(
+            deviceId,
+            widget.diseaseId!,
+            name: _nameController.text,
+            diagnosisDate: _dateController.text,
+            symptoms: _symptomsController.text,
+            treatment: _treatmentController.text,
+            observations: _observationsController.text.isNotEmpty ? _observationsController.text : null,
+            image: imageFile,
+          );
+          
           final list = container.read(diseaseLocalProvider(deviceId));
           final idx = widget.index ?? list.indexWhere((e) => e['localId'] == localId);
           if (idx != -1) {
@@ -157,7 +163,7 @@ class _DiseaseFormScreenState extends State<DiseaseFormScreen> {
         }
         } catch (e) {
           // On error: keep user UX clean; data already saved locally
-          if (mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('No se pudo sincronizar con el servidor. Se guardó localmente.')));
+          if (mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('No se pudo sincronizar con el servidor.')));
         }
 
       if (mounted) Navigator.of(context).pop(newDisease);

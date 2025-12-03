@@ -15,18 +15,79 @@ class DiseaseService {
     }
   }
 
-  Future<Disease> createDisease(String deviceId, dynamic data) async {
+  Future<Disease> createDisease(
+    String deviceId, {
+    required String name,
+    required String diagnosisDate,
+    required String symptoms,
+    required String treatment,
+    String? observations,
+    MultipartFile? image,
+  }) async {
     try {
-      final response = await dio.post('/devices/$deviceId/diseases', data: data);
+      final formData = FormData();
+      formData.fields.addAll([
+        MapEntry('name', name),
+        MapEntry('diagnosisDate', diagnosisDate),
+        MapEntry('symptoms', symptoms),
+        MapEntry('treatment', treatment),
+      ]);
+      
+      if (observations != null && observations.isNotEmpty) {
+        formData.fields.add(MapEntry('observations', observations));
+      }
+      
+      if (image != null) {
+        formData.files.add(MapEntry('image', image));
+      }
+
+      final response = await dio.post(
+        '/devices/$deviceId/diseases',
+        data: formData,
+        options: Options(
+          contentType: 'multipart/form-data',
+        ),
+      );
       return Disease.fromJson(response.data);
     } catch (e) {
       rethrow;
     }
   }
 
-  Future<Disease> updateDisease(String deviceId, String diseaseId, dynamic data) async {
+  Future<Disease> updateDisease(
+    String deviceId,
+    String diseaseId, {
+    required String name,
+    required String diagnosisDate,
+    required String symptoms,
+    required String treatment,
+    String? observations,
+    MultipartFile? image,
+  }) async {
     try {
-      final response = await dio.put('/devices/$deviceId/diseases/$diseaseId', data: data);
+      final formData = FormData();
+      formData.fields.addAll([
+        MapEntry('name', name),
+        MapEntry('diagnosisDate', diagnosisDate),
+        MapEntry('symptoms', symptoms),
+        MapEntry('treatment', treatment),
+      ]);
+      
+      if (observations != null && observations.isNotEmpty) {
+        formData.fields.add(MapEntry('observations', observations));
+      }
+      
+      if (image != null) {
+        formData.files.add(MapEntry('image', image));
+      }
+
+      final response = await dio.put(
+        '/devices/$deviceId/diseases/$diseaseId',
+        data: formData,
+        options: Options(
+          contentType: 'multipart/form-data',
+        ),
+      );
       return Disease.fromJson(response.data);
     } catch (e) {
       rethrow;

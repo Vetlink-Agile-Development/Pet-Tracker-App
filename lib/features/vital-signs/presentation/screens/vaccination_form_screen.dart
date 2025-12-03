@@ -90,10 +90,10 @@ class _VaccinationFormScreenState extends ConsumerState<VaccinationFormScreen> {
 
       if (widget.index != null) {
         notifier.updateVaccination(widget.index!, newVaccination);
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Vacuna actualizada localmente.')));
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Vacuna actualizada.')));
       } else {
         notifier.addVaccination(newVaccination);
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Vacuna guardada localmente.')));
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Vacuna guardada.')));
       }
 
       // Attempt to sync with API in background and update local item with server id when available

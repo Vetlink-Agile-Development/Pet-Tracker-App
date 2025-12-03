@@ -5,6 +5,7 @@ class Disease {
   final String? symptoms;
   final String? treatment;
   final String? observations;
+  final String? imagePath;
 
   Disease({
     required this.id,
@@ -13,6 +14,7 @@ class Disease {
     this.symptoms,
     this.treatment,
     this.observations,
+    this.imagePath,
   });
 
   factory Disease.fromJson(Map<String, dynamic> json) {
@@ -23,6 +25,7 @@ class Disease {
       symptoms: json['symptoms'],
       treatment: json['treatment'],
       observations: json['observations'],
+      imagePath: json['imagePath'],
     );
   }
 
@@ -34,6 +37,7 @@ class Disease {
       'symptoms': symptoms,
       'treatment': treatment,
       'observations': observations,
+      'imagePath': imagePath,
     };
   }
 }
