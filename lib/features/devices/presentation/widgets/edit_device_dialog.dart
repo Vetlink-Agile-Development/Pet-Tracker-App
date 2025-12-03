@@ -68,7 +68,7 @@ class _EditDeviceDialogState extends State<EditDeviceDialog> {
             TextFormField(
               controller: bearerController,
               decoration: InputDecoration(
-                labelText: 'Bearer',
+                labelText: 'Portador',
                 border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
               ),
             ),
@@ -86,17 +86,27 @@ class _EditDeviceDialogState extends State<EditDeviceDialog> {
 
             // Role Dropdown actualizado
             DropdownButtonFormField<String>(
-              initialValue: selectedRole,
+              value: selectedRole,
               decoration: InputDecoration(
-                labelText: 'Rol',
+                labelText: 'Tamaño de Mascota',
                 labelStyle: const TextStyle(fontSize: 16, color: Colors.black),
                 border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
                 contentPadding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
               ),
               items: roles.map((role) {
+                String displayText;
+                if (role == 'SMALL') {
+                  displayText = 'PEQUEÑO';
+                } else if (role == 'MEDIUM') {
+                  displayText = 'MEDIANO';
+                } else if (role == 'LARGE') {
+                  displayText = 'GRANDE';
+                } else {
+                  displayText = role;
+                }
                 return DropdownMenuItem(
                   value: role,
-                  child: Text(role, style: const TextStyle(fontSize: 14, color: Colors.black)),
+                  child: Text(displayText, style: const TextStyle(fontSize: 14, color: Colors.black)),
                 );
               }).toList(),
               onChanged: (value) {

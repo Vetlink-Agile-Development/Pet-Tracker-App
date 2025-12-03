@@ -53,7 +53,13 @@ class DeviceCard extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  device.careMode,
+                  device.careMode == "SMALL"
+                      ? "PEQUEÑO"
+                      : device.careMode == "MEDIUM"
+                          ? "MEDIANO"
+                          : device.careMode == "LARGE"
+                              ? "GRANDE"
+                              : device.careMode,
                   style: const TextStyle(
                     fontSize: 14,
                     color: Colors.grey,
@@ -63,7 +69,11 @@ class DeviceCard extends StatelessWidget {
             ),
           ),
           Text(
-            device.status,
+            device.status == "CONNECTED"
+                ? "CONECTADO"
+                : device.status == "DISCONNECTED"
+                    ? "DESCONECTADO"
+                    : device.status,
             style: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.bold,
