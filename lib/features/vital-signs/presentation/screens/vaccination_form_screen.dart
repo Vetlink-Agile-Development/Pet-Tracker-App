@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:dio/dio.dart';
+import 'package:path/path.dart' as path_util;
 // device selection is global; do not fetch devices here
 import '../../infrastructure/vaccination_service.dart';
 import 'package:pet_tracker/config/consts/environments.dart';
@@ -103,26 +104,63 @@ class _VaccinationFormScreenState extends ConsumerState<VaccinationFormScreen> {
         final dio = Dio(BaseOptions(baseUrl: Environment.apiUrl, headers: token != null ? {'Authorization': 'Bearer $token'} : (apiKey != null ? {'x-api-key': apiKey} : null)));
         final service = VaccinationService(dio);
 
-          if (widget.vaccinationId == null) {
-          final serverVaccination = await service.createVaccination(deviceKey, newVaccination);
+        if (widget.vaccinationId == null) {
+          // Create new vaccination
+          MultipartFile? imageFile;
+          if (_documentImage != null) {
+            final file = File(_documentImage!.path);
+            final fileName = path_util.basename(file.path);
+            imageFile = await MultipartFile.fromFile(file.path, filename: fileName);
+          }
+          
+          final serverVaccination = await service.createVaccination(
+            deviceKey,
+            vaccineName: _vaccineController.text,
+            dateAdministered: _dateController.text,
+            batch: _batchController.text.isNotEmpty ? _batchController.text : null,
+            veterinarian: _vetController.text.isNotEmpty ? _vetController.text : null,
+            nextDueDate: _nextDueController.text.isNotEmpty ? _nextDueController.text : null,
+            observations: _observationsController.text.isNotEmpty ? _observationsController.text : null,
+            image: imageFile,
+          );
+          
           // find local item by localId and patch with server id + synced true
           final list = ref.read(vaccinationLocalProvider(deviceKey));
           final idx = list.indexWhere((e) => e['localId'] == localId);
-            if (idx != -1) {
-              final updated = {...list[idx], 'id': serverVaccination.id, 'synced': true};
-              notifier.updateVaccination(idx, updated);
-            }
-            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Vacuna sincronizada con el servidor.')));
+          if (idx != -1) {
+            final updated = {...list[idx], 'id': serverVaccination.id, 'synced': true};
+            notifier.updateVaccination(idx, updated);
+          }
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Vacuna sincronizada con el servidor.')));
         } else {
-          final serverVaccination = await service.updateVaccination(deviceKey, widget.vaccinationId!, newVaccination);
+          // Update existing vaccination
+          MultipartFile? imageFile;
+          if (_documentImage != null) {
+            final file = File(_documentImage!.path);
+            final fileName = path_util.basename(file.path);
+            imageFile = await MultipartFile.fromFile(file.path, filename: fileName);
+          }
+          
+          final serverVaccination = await service.updateVaccination(
+            deviceKey,
+            widget.vaccinationId!,
+            vaccineName: _vaccineController.text,
+            dateAdministered: _dateController.text,
+            batch: _batchController.text.isNotEmpty ? _batchController.text : null,
+            veterinarian: _vetController.text.isNotEmpty ? _vetController.text : null,
+            nextDueDate: _nextDueController.text.isNotEmpty ? _nextDueController.text : null,
+            observations: _observationsController.text.isNotEmpty ? _observationsController.text : null,
+            image: imageFile,
+          );
+          
           // update local item if we can find it
           final list = ref.read(vaccinationLocalProvider(deviceKey));
           final idx = widget.index ?? list.indexWhere((e) => e['localId'] == localId);
-            if (idx != -1) {
-              final updated = {...list[idx], 'id': serverVaccination.id, 'synced': true};
-              notifier.updateVaccination(idx, updated);
-            }
-            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Vacuna actualizada en el servidor.')));
+          if (idx != -1) {
+            final updated = {...list[idx], 'id': serverVaccination.id, 'synced': true};
+            notifier.updateVaccination(idx, updated);
+          }
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Vacuna actualizada en el servidor.')));
         }
       } catch (e) {
         // Silent fallback: already saved locally

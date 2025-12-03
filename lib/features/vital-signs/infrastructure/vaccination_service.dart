@@ -15,18 +15,101 @@ class VaccinationService {
     }
   }
 
-  Future<Vaccination> createVaccination(String deviceId, Map<String, dynamic> data) async {
+  Future<Vaccination> createVaccination(
+    String deviceId, {
+    required String vaccineName,
+    required String dateAdministered,
+    String? batch,
+    String? veterinarian,
+    String? nextDueDate,
+    String? observations,
+    MultipartFile? image,
+  }) async {
     try {
-      final response = await dio.post('/devices/$deviceId/vaccinations', data: data);
+      final formData = FormData();
+      formData.fields.addAll([
+        MapEntry('vaccineName', vaccineName),
+        MapEntry('dateAdministered', dateAdministered),
+      ]);
+      
+      if (batch != null && batch.isNotEmpty) {
+        formData.fields.add(MapEntry('batch', batch));
+      }
+      
+      if (veterinarian != null && veterinarian.isNotEmpty) {
+        formData.fields.add(MapEntry('veterinarian', veterinarian));
+      }
+      
+      if (nextDueDate != null && nextDueDate.isNotEmpty) {
+        formData.fields.add(MapEntry('nextDueDate', nextDueDate));
+      }
+      
+      if (observations != null && observations.isNotEmpty) {
+        formData.fields.add(MapEntry('observations', observations));
+      }
+      
+      if (image != null) {
+        formData.files.add(MapEntry('image', image));
+      }
+
+      final response = await dio.post(
+        '/devices/$deviceId/vaccinations',
+        data: formData,
+        options: Options(
+          contentType: 'multipart/form-data',
+        ),
+      );
       return Vaccination.fromJson(response.data);
     } catch (e) {
       rethrow;
     }
   }
 
-  Future<Vaccination> updateVaccination(String deviceId, String vaccinationId, Map<String, dynamic> data) async {
+  Future<Vaccination> updateVaccination(
+    String deviceId,
+    String vaccinationId, {
+    required String vaccineName,
+    required String dateAdministered,
+    String? batch,
+    String? veterinarian,
+    String? nextDueDate,
+    String? observations,
+    MultipartFile? image,
+  }) async {
     try {
-      final response = await dio.put('/devices/$deviceId/vaccinations/$vaccinationId', data: data);
+      final formData = FormData();
+      formData.fields.addAll([
+        MapEntry('vaccineName', vaccineName),
+        MapEntry('dateAdministered', dateAdministered),
+      ]);
+      
+      if (batch != null && batch.isNotEmpty) {
+        formData.fields.add(MapEntry('batch', batch));
+      }
+      
+      if (veterinarian != null && veterinarian.isNotEmpty) {
+        formData.fields.add(MapEntry('veterinarian', veterinarian));
+      }
+      
+      if (nextDueDate != null && nextDueDate.isNotEmpty) {
+        formData.fields.add(MapEntry('nextDueDate', nextDueDate));
+      }
+      
+      if (observations != null && observations.isNotEmpty) {
+        formData.fields.add(MapEntry('observations', observations));
+      }
+      
+      if (image != null) {
+        formData.files.add(MapEntry('image', image));
+      }
+
+      final response = await dio.put(
+        '/devices/$deviceId/vaccinations/$vaccinationId',
+        data: formData,
+        options: Options(
+          contentType: 'multipart/form-data',
+        ),
+      );
       return Vaccination.fromJson(response.data);
     } catch (e) {
       rethrow;
