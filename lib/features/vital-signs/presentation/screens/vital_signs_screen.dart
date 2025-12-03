@@ -7,20 +7,23 @@ import 'package:pet_tracker/features/vital-signs/presentation/widgets/spo2_chart
 import 'package:pet_tracker/features/vital-signs/presentation/widgets/spo2_tips_list.dart';
 import 'diseases_tab.dart';
 import 'vaccinations_tab.dart';
+import 'dewormings_tab.dart';
 
 class HealthSummaryScreen extends ConsumerStatefulWidget {
   const HealthSummaryScreen({super.key});
   @override
-  ConsumerState<HealthSummaryScreen> createState() => _HealthSummaryScreenState();
+  ConsumerState<HealthSummaryScreen> createState() =>
+      _HealthSummaryScreenState();
 }
 
-class _HealthSummaryScreenState extends ConsumerState<HealthSummaryScreen> with SingleTickerProviderStateMixin {
+class _HealthSummaryScreenState extends ConsumerState<HealthSummaryScreen>
+    with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 4, vsync: this); // ahora 4 pestañas
+    _tabController = TabController(length: 5, vsync: this); // ahora 5 pestañas
   }
 
   @override
@@ -35,14 +38,17 @@ class _HealthSummaryScreenState extends ConsumerState<HealthSummaryScreen> with 
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Resumen Mensual de Salud', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+        title: const Text('Resumen Mensual de Salud',
+            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
         bottom: TabBar(
           controller: _tabController,
+          isScrollable: true,
           tabs: const [
             Tab(text: 'Frecuencia Cardíaca (BPM)'),
             Tab(text: 'Saturación (SpO2)'),
             Tab(text: 'Enfermedades'),
             Tab(text: 'Vacunaciones'),
+            Tab(text: 'Desparasitaciones'),
           ],
         ),
       ),
@@ -60,7 +66,8 @@ class _HealthSummaryScreenState extends ConsumerState<HealthSummaryScreen> with 
               child: Column(
                 children: [
                   Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 8.0, horizontal: 16.0),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -70,7 +77,8 @@ class _HealthSummaryScreenState extends ConsumerState<HealthSummaryScreen> with 
                         ),
                         Text(
                           '${state.selectedMonth.month.toString().padLeft(2, '0')}/${state.selectedMonth.year}',
-                          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                          style: const TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.w600),
                         ),
                         Row(children: [
                           IconButton(
@@ -81,7 +89,8 @@ class _HealthSummaryScreenState extends ConsumerState<HealthSummaryScreen> with 
                                 initialDate: state.selectedMonth,
                                 firstDate: DateTime(2000),
                                 lastDate: DateTime(2100),
-                                helpText: 'Seleccione mes y año (el día se ignora)',
+                                helpText:
+                                    'Seleccione mes y año (el día se ignora)',
                               );
                               if (picked != null) {
                                 await notifier.pickMonth(picked);
@@ -102,11 +111,13 @@ class _HealthSummaryScreenState extends ConsumerState<HealthSummaryScreen> with 
                       child: Center(
                         child: Column(
                           children: [
-                            const Icon(Icons.info_outline, size: 48, color: Colors.grey),
+                            const Icon(Icons.info_outline,
+                                size: 48, color: Colors.grey),
                             const SizedBox(height: 12),
                             Text(
                               'No hay datos para ${state.selectedMonth.month.toString().padLeft(2, '0')}/${state.selectedMonth.year}',
-                              style: const TextStyle(fontSize: 16, color: Colors.grey),
+                              style: const TextStyle(
+                                  fontSize: 16, color: Colors.grey),
                             ),
                             const SizedBox(height: 8),
                             ElevatedButton(
@@ -136,7 +147,8 @@ class _HealthSummaryScreenState extends ConsumerState<HealthSummaryScreen> with 
               child: Column(
                 children: [
                   Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 8.0, horizontal: 16.0),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -146,7 +158,8 @@ class _HealthSummaryScreenState extends ConsumerState<HealthSummaryScreen> with 
                         ),
                         Text(
                           '${state.selectedMonth.month.toString().padLeft(2, '0')}/${state.selectedMonth.year}',
-                          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                          style: const TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.w600),
                         ),
                         Row(children: [
                           IconButton(
@@ -177,11 +190,13 @@ class _HealthSummaryScreenState extends ConsumerState<HealthSummaryScreen> with 
                       child: Center(
                         child: Column(
                           children: [
-                            const Icon(Icons.info_outline, size: 48, color: Colors.grey),
+                            const Icon(Icons.info_outline,
+                                size: 48, color: Colors.grey),
                             const SizedBox(height: 12),
                             Text(
                               'No hay datos para ${state.selectedMonth.month.toString().padLeft(2, '0')}/${state.selectedMonth.year}',
-                              style: const TextStyle(fontSize: 16, color: Colors.grey),
+                              style: const TextStyle(
+                                  fontSize: 16, color: Colors.grey),
                             ),
                             const SizedBox(height: 8),
                             ElevatedButton(
@@ -206,6 +221,9 @@ class _HealthSummaryScreenState extends ConsumerState<HealthSummaryScreen> with 
 
           // Tab 4: Vaccinations
           const VaccinationsTab(petId: 0),
+
+          // Tab 5: Dewormings
+          const DewormingsTab(petId: 0),
         ],
       ),
     );

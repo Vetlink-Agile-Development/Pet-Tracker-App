@@ -131,7 +131,7 @@ class _VaccinationFormScreenState extends ConsumerState<VaccinationFormScreen> {
             final updated = {...list[idx], 'id': serverVaccination.id, 'synced': true};
             notifier.updateVaccination(idx, updated);
           }
-          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Vacuna sincronizada con el servidor.')));
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Vacunas sincronizadas')));
         } else {
           // Update existing vaccination
           MultipartFile? imageFile;
